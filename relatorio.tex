@@ -183,4 +183,24 @@ Depois eu aceitei esse Pull Request direto no GitHub.
 
 No começo a conexão do filesystem não subiu, porque o npx não existia nesta máquina. Eu instalei o npx no Windows, autorizei os servidores no Cursor e liguei o GitHub no navegador. Com a conexão no ar, pedi: liste os arquivos alterados no último commit. O MCP do GitHub respondeu o commit \texttt{0b82309}, mensagem \emph{Documenta o endereço do Pull Request no relatório.}, e os arquivos \texttt{relatorio.tex} e \texttt{relatorio.pdf}.
 
+\newpage
+
+\section*{Etapa 6. Relatório final}
+
+Repositório: \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona}
+
+\textbf{1. Ferramentas e por quê.} Eu configurei o Cursor (versão 3.17.8), porque já o uso no dia a dia e tenho licença paga. Ele cobre a IDE com assistente e o agente no próprio editor. Também liguei dois servidores MCP: filesystem, com npx, e GitHub, com a imagem oficial no Docker.
+
+\textbf{2. Trecho útil do AGENTS.md.} O trecho que mais me ajudou foi este, nas convenções:
+
+\begin{quote}
+Regra de negócio na camada de aplicação (Service), não no controller e não na tela.
+\end{quote}
+
+Ele é útil porque a IA tende a colocar a regra no controller quando o pedido é curto. Esse trecho, junto com a seção Não fazer, foi o que eu cobrei de novo no prompt eficaz da Etapa 4.
+
+\textbf{3. Prompt fraco versus prompt eficaz.} O prompt fraco foi só ``Adicione arquivar tarefa.'' No Grok 4.6 a regra caiu no controller, sem Service e sem teste, e a tarefa arquivada continuou na lista ativa. O prompt eficaz disse o contexto, o padrão (teste primeiro, um Service por caso de uso, controller só HTTP), as restrições e como validar. Os dois modelos então criaram um Service novo e escreveram testes. A diferença maior foi essa: sem dizer onde a regra vive e como conferir, a IA entrega o caminho mais curto.
+
+\textbf{4. Um obstáculo e como resolvi.} O servidor MCP filesystem não subiu, porque esta máquina não tinha npx. Eu instalei o npx no Windows, autorizei os servidores no Cursor e fiz o login do GitHub no navegador. Depois pedi para listar os arquivos do último commit. O MCP do GitHub respondeu: \texttt{relatorio.tex} e \texttt{relatorio.pdf}.
+
 \end{document}
