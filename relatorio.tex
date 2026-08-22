@@ -1,53 +1,50 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[12pt,a4paper]{article}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[brazil]{babel}
 \usepackage{lmodern}
-\usepackage[margin=1.6cm]{geometry}
+\usepackage[a4paper,margin=2.5cm]{geometry}
 \usepackage{hyperref}
 \usepackage{xurl}
 
 \pagestyle{empty}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0.38em}
-\setlength{\emergencystretch}{3em}
+\setlength{\parskip}{0.5em}
 
 \begin{document}
 
 \begin{center}
-{\small UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE \textbullet\ INSTITUTO METRÓPOLE DIGITAL \textbullet\ PPgTI}\\[0.2em]
-{\large\bfseries Desenvolvimento de Software com IA}\\[0.15em]
-{\normalsize Atividade Prática Assíncrona. Relatório final (Etapa 6)}\\[0.15em]
-{\small Aluno: Geomerez Raduan de Oliveira Bandeira \quad Professor: Prof.\ Dr.\ Jean Mário Moreira de Lima \quad Natal/RN, agosto de 2026}
+{\bfseries Atividade Prática Assíncrona}\\
+Geomerez Raduan de Oliveira Bandeira
 \end{center}
-
-\vspace{0.15em}
-\hrule
-\vspace{0.45em}
-
-Repositório: \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona}
-
-O texto completo das Etapas 1 a 5, que não cabe nesta página, está em \path{ia-dev-lab/docs/relatorio-etapas.md}. Abaixo estão os quatro pontos pedidos no enunciado e o mapa de onde o professor encontra cada detalhe.
-
-\textbf{1. Ferramentas e por quê.} Eu configurei o Cursor (versão 3.17.8), porque já o uso no dia a dia e tenho licença paga. Ele cobre a IDE com assistente e o agente no próprio editor. Também liguei dois servidores MCP: filesystem, com npx, e GitHub, com a imagem oficial no Docker. Detalhe da escolha: Etapa 1 em \path{ia-dev-lab/docs/relatorio-etapas.md} e ADR \path{ia-dev-lab/docs/adr/0001-escolha-do-cursor.md}.
-
-\textbf{2. Trecho útil do AGENTS.md.} O trecho que mais me ajudou foi este, nas convenções: \emph{Regra de negócio na camada de aplicação (Service), não no controller e não na tela.} Ele é útil porque a IA tende a colocar a regra no controller quando o pedido é curto. Esse trecho, junto com a seção Não fazer, foi o que eu cobrei de novo no prompt eficaz da Etapa 4. Arquivo completo: \path{ia-dev-lab/AGENTS.md}. Regras por pasta: \path{ia-dev-lab/.cursor/rules/}. Prompts que conferiram o arquivo (subir, testar e parar o Docker): Etapa 2 em \path{ia-dev-lab/docs/relatorio-etapas.md}.
-
-\textbf{3. Prompt fraco versus prompt eficaz.} O prompt fraco foi só ``Adicione arquivar tarefa.'' No Grok 4.6 a regra caiu no controller, sem Service e sem teste, e a tarefa arquivada continuou na lista ativa. O prompt eficaz disse o contexto, o padrão (teste primeiro, um Service por caso de uso, controller só HTTP), as restrições e como validar. Os dois modelos então criaram um Service novo e escreveram testes. A diferença maior foi essa: sem dizer onde a regra vive e como conferir, a IA entrega o caminho mais curto. Prompts completos, os quatro casos (Grok e Composer, fraco e eficaz) e os números de teste: \path{ia-dev-lab/docs/prompts-comparacao.md} e Etapa 4 em \path{ia-dev-lab/docs/relatorio-etapas.md}.
-
-\textbf{4. Um obstáculo e como resolvi.} O servidor MCP filesystem não subiu, porque esta máquina não tinha npx. Eu instalei o npx no Windows, autorizei os servidores no Cursor e fiz o login do GitHub no navegador. Depois pedi para listar os arquivos do último commit. O MCP do GitHub respondeu: \texttt{relatorio.tex} e \texttt{relatorio.pdf}. Configuração: \texttt{.mcp.json} na raiz. Relato completo: Etapa 5 em \path{ia-dev-lab/docs/relatorio-etapas.md}.
 
 \vspace{0.2em}
 \hrule
-\vspace{0.35em}
+\vspace{0.55em}
 
-\textbf{Onde encontrar o restante.}\\
-Etapa 1 (hello.py, prompt e execução): \path{ia-dev-lab/hello.py} e \path{ia-dev-lab/docs/relatorio-etapas.md}.\\
-Etapa 2 (ToDo Laravel e React, AGENTS.md, regras): \path{ia-dev-lab/AGENTS.md}, \path{ia-dev-lab/.cursor/rules/} e \path{ia-dev-lab/docs/relatorio-etapas.md}.\\
-Etapa 3 (pastas, README, ADRs): \path{ia-dev-lab/README.md} e \path{ia-dev-lab/docs/adr/} (0001 Cursor, 0002 monorepo, 0003 Docker, 0004 Service).\\
-Etapa 4 (arquivar tarefa): \path{ia-dev-lab/docs/prompts-comparacao.md}.\\
-Etapa 5 (branch, commit, PR e MCP): branch \texttt{feature/setup-inicial}; PR que eu aceitei no GitHub \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona/pull/1}; PR aberto \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona/pull/2}; arquivo \texttt{.mcp.json}.\\
+Repositório: \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona}
+
+O texto completo das Etapas 1 a 5 está em \path{ia-dev-lab/docs/relatorio-etapas.md}. Nesta página estão os quatro pontos pedidos no enunciado.
+
+\textbf{1. Ferramentas e por quê.} Eu configurei o Cursor (versão 3.17.8), porque já o uso no dia a dia e tenho licença paga. Ele cobre a IDE com assistente e o agente no próprio editor. Também liguei dois servidores MCP: filesystem, com npx, e GitHub, com a imagem oficial no Docker.
+
+\textbf{2. Trecho útil do AGENTS.md.} O trecho que mais me ajudou foi este, nas convenções: \emph{Regra de negócio na camada de aplicação (Service), não no controller e não na tela.} Ele é útil porque a IA tende a colocar a regra no controller quando o pedido é curto. Esse trecho, junto com a seção Não fazer, foi o que eu cobrei de novo no prompt eficaz da Etapa 4. O arquivo completo está em \path{ia-dev-lab/AGENTS.md}.
+
+\textbf{3. Prompt fraco versus prompt eficaz.} O prompt fraco foi só ``Adicione arquivar tarefa.'' No Grok 4.6 a regra caiu no controller, sem Service e sem teste, e a tarefa arquivada continuou na lista ativa. O prompt eficaz disse o contexto, o padrão (teste primeiro, um Service por caso de uso, controller só HTTP), as restrições e como validar. Os dois modelos então criaram um Service novo e escreveram testes. A diferença maior foi essa: sem dizer onde a regra vive e como conferir, a IA entrega o caminho mais curto. O comparativo completo está em \path{ia-dev-lab/docs/prompts-comparacao.md}.
+
+\textbf{4. Um obstáculo e como resolvi.} O servidor MCP filesystem não subiu, porque esta máquina não tinha npx. Eu instalei o npx no Windows, autorizei os servidores no Cursor e fiz o login do GitHub no navegador. Depois pedi para listar os arquivos do último commit. O MCP do GitHub respondeu: \texttt{relatorio.tex} e \texttt{relatorio.pdf}. A configuração está em \texttt{.mcp.json}, na raiz.
+
+\vspace{0.15em}
+\hrule
+\vspace{0.4em}
+
+\textbf{Onde o professor encontra o restante.}\\
+Etapa 1: \path{ia-dev-lab/hello.py} e \path{ia-dev-lab/docs/relatorio-etapas.md}.\\
+Etapa 2: \path{ia-dev-lab/AGENTS.md} e \path{ia-dev-lab/.cursor/rules/}.\\
+Etapa 3: \path{ia-dev-lab/README.md} e \path{ia-dev-lab/docs/adr/} (0001 Cursor, 0002 monorepo, 0003 Docker, 0004 Service).\\
+Etapa 4: \path{ia-dev-lab/docs/prompts-comparacao.md}.\\
+Etapa 5: branch \texttt{feature/setup-inicial}; PR aceito \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona/pull/1}; PR aberto \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona/pull/2}; \texttt{.mcp.json}.\\
 Laboratório: \path{ia-dev-lab/backend/} e \path{ia-dev-lab/frontend/}.
 
 \end{document}
