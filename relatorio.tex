@@ -142,9 +142,9 @@ Adicione arquivar tarefa.
 
 \textbf{Prompt eficaz.}
 \begin{quote}
-Contexto: este é um ToDo em monorepo. A API é Laravel. A tela é React com TypeScript, Context API e MUI. Arquivar tarefa é um caso de uso novo: a tarefa deixa a lista ativa sem ser apagada. O código já tem criar, listar, concluir e excluir.
+Contexto: este é um ToDo em monorepo. A API é Laravel. A tela é React com TypeScript, Context API e MUI. Arquivar tarefa é um caso de uso novo: a tarefa deixa a lista ativa sem ser apagada. O código já tem que ter criar, listar, concluir e excluir.
 
-Exemplo de padrão a seguir: teste primeiro. Um caso de uso por Service. Controller só HTTP. Persistência por interface de repositório. Na tela, o componente não chama a API direto.
+Exemplo de padrão a seguir: teste primeiro. Um caso de uso por Service. Controller só HTTP. Persistência só via interface de repositório. Na tela, o componente não deve chamar a API direto.
 
 Restrições: não colocar regra de negócio no controller nem na tela. Não pular camada. Não inchar um Service que já existe. Não pular testes.
 
@@ -173,7 +173,9 @@ O repositório no GitHub já existia:
 
 Eu criei a branch \texttt{feature/setup-inicial} para as alterações do laboratório. Pedi à IA uma mensagem de commit a partir do diff. A mensagem que eu aceitei foi: \emph{Monta o laboratório ToDo, o contexto da IA e o relatório da atividade.}
 
-Abri um Pull Request dessa branch para a \texttt{main}, só para praticar o fluxo, sem fazer merge.
+Abri um Pull Request dessa branch para a \texttt{main}, só para praticar o fluxo, sem fazer merge:
+
+\url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona/pull/1}
 
 \textbf{Servidor MCP.} Eu criei o arquivo \texttt{.mcp.json} na raiz do repositório, com um servidor filesystem, como o enunciado pede. Há uma cópia no formato do Cursor. O comando do servidor é o npx do pacote de filesystem.
 
