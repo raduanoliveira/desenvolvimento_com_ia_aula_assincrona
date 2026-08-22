@@ -1,0 +1,184 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+\usepackage[margin=2.8cm]{geometry}
+\usepackage{hyperref}
+\usepackage{xurl}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+
+\begin{document}
+
+\begin{center}
+{\large UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE}\\[0.35em]
+{\large INSTITUTO METRÓPOLE DIGITAL}\\[0.35em]
+{\normalsize PROGRAMA DE PÓS-GRADUAÇÃO EM TECNOLOGIA DA INFORMAÇÃO}\\[0.25em]
+{\normalsize Doutorado Profissional}
+\end{center}
+
+\vspace{1.6cm}
+
+\begin{center}
+\rule{\textwidth}{0.8pt}\\[0.45em]
+{\LARGE\bfseries Desenvolvimento de Software com IA}\\[0.7em]
+{\Large Atividade Prática Assíncrona}\\[0.45em]
+{\large Configuração do Ambiente e Fluxo de Trabalho com IA}\\[0.45em]
+\rule{\textwidth}{0.8pt}
+\end{center}
+
+\vspace{2.4cm}
+
+\begin{flushleft}
+\textbf{Aluno:} Geomerez Raduan de Oliveira Bandeira\\[0.45em]
+\textbf{Programa:} PPgTI, Doutorado Profissional\\[0.45em]
+\textbf{Professor:} Prof.\ Dr.\ Jean Mário Moreira de Lima
+\end{flushleft}
+
+\vfill
+
+\begin{center}
+Natal/RN\\
+Agosto de 2026
+\end{center}
+
+\newpage
+
+\section*{Etapa 1. Configuração do Ambiente}
+
+\textbf{Ferramenta escolhida.} Eu usei o Cursor, versão \textbf{3.17.8} (versão estável, baseada no VS Code 1.128.0). Escolhi essa ferramenta porque já a uso no dia a dia e tenho licença paga. Ela atende o que a atividade pede na parte de IDE com assistente.
+
+\textbf{Pasta do laboratório.} Criei a pasta \texttt{ia-dev-lab/}, como pede o enunciado. O arquivo de teste ficou em \texttt{ia-dev-lab/hello.py}.
+
+\textbf{Repositório Git/GitHub.} Iniciei o repositório neste projeto e liguei ao GitHub:
+
+\url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona.git}
+
+O primeiro commit (\texttt{ca1d094}, com a mensagem \texttt{first commit}) tem só o \texttt{README.md}. Depois publiquei a branch \texttt{main} com \texttt{git push -u origin main}.
+
+\textbf{Prompt digitado.}
+\begin{quote}
+Crie um arquivo hello.py que imprima uma saudação e explique o que você fez.
+\end{quote}
+
+\textbf{Resposta da LLM.} A LLM criou o arquivo \texttt{ia-dev-lab/hello.py} e deu esta explicação:
+\begin{quote}
+Criei o arquivo hello.py na pasta ia-dev-lab. O programa tem uma função main que imprime a frase ``Olá! Este é o ia-dev-lab no Cursor.'' Se o arquivo for executado direto, essa função é chamada e a saudação aparece no terminal.
+\end{quote}
+
+\textbf{Validação da execução.} Rodei o \texttt{hello.py} de dentro da pasta \texttt{ia-dev-lab} e a saída foi: \emph{Olá! Este é o ia-dev-lab no Cursor.}
+
+\newpage
+
+\section*{Etapa 2. Contexto do Projeto}
+
+Para esta etapa defini um projeto de software: uma ToDo list em monorepo, com API em Laravel no backend e React com TypeScript, Context API e Material UI no frontend. O layout deve ser moderno. O código segue TDD, SOLID, camadas POSA e padrões GoF quando foi necessário. Implementei a camada Service no backend, que não vem por padrão em projetos Laravel: a regra de negócio fica no Service, não no controller. O ambiente é Docker. As pastas são \texttt{ia-dev-lab/backend/} e \texttt{ia-dev-lab/frontend/}.
+
+\textbf{O que é o AGENTS.md.} Criei o arquivo \texttt{ia-dev-lab/AGENTS.md} no formato do slide da aula. Ele é o contexto permanente da IA neste projeto. As seções são:
+
+\begin{itemize}
+\item \textbf{Sobre o projeto:} diz o que o sistema faz (ToDo list, Laravel, React, MUI, Docker).
+\item \textbf{Comandos:} lista o que a IA deve rodar. Subir tudo, parar tudo, testes de unidade e de feature no backend, testes do frontend e migrations.
+\item \textbf{Convenções de código:} ideias gerais para a IA seguir: TDD, Service, Repository, SOLID, camadas POSA, GoF quando foi necessário, layout moderno e os tipos de teste. Sem citar arquivo do projeto.
+\item \textbf{Não fazer:} não pular camada, não pular teste, não trocar o MUI por CSS próprio, não instalar PHP ou Node na máquina.
+\end{itemize}
+
+Também criei uma regra customizada para o backend e outra para o frontend, na pasta de regras do Cursor dentro de \texttt{ia-dev-lab}.
+
+Para conferir se a IA usa esse arquivo, pedi prompts que acionam os comandos do \texttt{AGENTS.md}.
+
+\textbf{Prompt digitado (subir o ambiente).}
+\begin{quote}
+Suba o ambiente inteiro deste projeto.
+\end{quote}
+
+\textbf{Resultado da execução.} Deu certo. O sistema subiu. Abri a lista de tarefas no navegador e ela estava vazia, o que era esperado. A tela do aplicativo também abriu sem erro.
+
+\textbf{Prompt digitado (testes).}
+\begin{quote}
+Rode as checagens automáticas da API e da tela.
+\end{quote}
+
+\textbf{Resultado da execução.} Deu certo. As checagens automáticas passaram: seis no servidor e cinco na tela do aplicativo.
+
+\textbf{Prompt digitado (parar o ambiente).}
+\begin{quote}
+Pare o ambiente inteiro.
+\end{quote}
+
+\textbf{Resultado da execução.} Deu certo. O sistema desligou. A lista de tarefas e a tela do aplicativo deixaram de abrir no navegador.
+
+\newpage
+
+\section*{Etapa 3. Organização do Projeto}
+
+Nesta etapa organizei o laboratório por lado do sistema. A API ficou em \texttt{backend/}, dentro de \texttt{ia-dev-lab}. A tela ficou em \texttt{frontend/}. Evitei juntar tudo só por tipo de arquivo.
+
+Criei o \texttt{README.md} na pasta \texttt{ia-dev-lab}, com visão geral, como subir o ambiente e os comandos principais. Também criei a pasta \texttt{docs/adr/} com quatro ADRs, que registram as escolhas deste projeto:
+
+\begin{itemize}
+\item \textbf{0001.} Cursor, porque eu já uso no dia a dia e tenho licença paga.
+\item \textbf{0002.} ToDo em monorepo com Laravel e React, porque é a stack que eu já conheço e consigo avaliar o que a IA gera.
+\item \textbf{0003.} Docker, para não instalar nada extra no Windows e para a IA subir e parar tudo pelos mesmos comandos.
+\item \textbf{0004.} Camada Service no Laravel, para o controller só tratar HTTP e para exercitar SOLID e camadas POSA.
+\end{itemize}
+
+A estrutura final se aproxima do modelo da aula: \texttt{AGENTS.md}, \texttt{README.md}, \texttt{docs/adr/} e o código separado por domínio.
+
+\newpage
+
+\section*{Etapa 4. Boas Práticas de Prompt}
+
+A funcionalidade que eu escolhi foi arquivar uma tarefa, sem apagar o registro. Eu rodei o mesmo pedido de duas formas, em dois modelos, e conferi o código gerado. O detalhe também está em docs/prompts-comparacao.md. O código que ficou no laboratório é o do prompt eficaz no Grok 4.6.
+
+\textbf{Prompt fraco.}
+\begin{quote}
+Adicione arquivar tarefa.
+\end{quote}
+
+\textbf{Prompt eficaz.}
+\begin{quote}
+Contexto: este é um ToDo em monorepo. A API é Laravel. A tela é React com TypeScript, Context API e MUI. Arquivar tarefa é um caso de uso novo: a tarefa deixa a lista ativa sem ser apagada. O código já tem que ter criar, listar, concluir e excluir.
+
+Exemplo de padrão a seguir: teste primeiro. Um caso de uso por Service. Controller só HTTP. Persistência só via interface de repositório. Na tela, o componente não deve chamar a API direto.
+
+Restrições: não colocar regra de negócio no controller nem na tela. Não pular camada. Não inchar um Service que já existe. Não pular testes.
+
+Validação: teste da rota de arquivar e teste de unidade do Service. Na tela, ação de arquivar com teste de componente.
+\end{quote}
+
+\textbf{Modelos.} Principal: Cursor Grok 4.6. Menor performance: Composer 2.5 Fast.
+
+\textbf{Grok 4.6, prompt fraco.} A IA criou a rota de arquivar e um botão na lista. A regra ficou no controller: busca a tarefa, marca como arquivada e salva ali mesmo. Não criou Service novo. Não escreveu teste de arquivar. A listagem da API continua devolvendo tudo, inclusive o que foi arquivado. Na tela, o item arquivado permanece na lista, só muda o rótulo.
+
+\textbf{Grok 4.6, prompt eficaz.} A IA criou um Service só para arquivar. O controller só chama esse Service. A lista ativa filtra o que está arquivado. Escreveu teste de unidade do Service, teste da rota e testes na tela. Eu conferi a execução: nove testes da API passaram e sete da tela passaram.
+
+\textbf{Composer 2.5 Fast, prompt fraco.} Mesmo pedido curto. Desta vez a IA criou um Service de arquivar e o controller só delegou. Ainda assim não escreveu nenhum teste novo. A listagem escondeu arquivadas direto no repositório.
+
+\textbf{Composer 2.5 Fast, prompt eficaz.} A IA também criou o Service, a rota e o botão. Escreveu teste de unidade, teste da rota e teste do botão na lista. Rodou os testes no Docker: oito da API passaram e seis da tela passaram. Não chegou no mesmo conjunto de testes do Grok com o prompt eficaz: faltou o teste de unidade da lista ativa e os testes do acesso à API e do estado da tela.
+
+\textbf{Diferenças que eu observei.} No prompt fraco, o pedido curto não disse onde a regra deveria viver nem como validar. No Grok isso caiu no controller, sem teste e sem tirar a tarefa da lista ativa. No Composer o código copiou o jeito dos outros Services, mas mesmo assim pulou os testes. No prompt eficaz, os dois modelos abriram um caso de uso novo, mantiveram o controller magro e escreveram testes. A diferença de qualidade apareceu mais no Grok, que cobriu unidade, rota e tela. O modelo mais fraco, com o prompt curto, não desandou tanto quanto o Grok no controller, porque o projeto já tinha Services para copiar. Ainda assim o prompt eficaz foi o que fez os dois modelos testarem de verdade.
+
+\newpage
+
+\section*{Etapa 5. Integração com Git/GitHub e MCP}
+
+O repositório no GitHub já existia:
+
+\url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona.git}
+
+Eu criei a branch \texttt{feature/setup-inicial} para as alterações do laboratório. Pedi à IA uma mensagem de commit a partir do diff. A mensagem que eu aceitei foi: \emph{Monta o laboratório ToDo, o contexto da IA e o relatório da atividade.}
+
+Abri um Pull Request dessa branch para a \texttt{main}, só para praticar o fluxo, sem fazer merge:
+
+\url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona/pull/1}
+
+\textbf{Servidor MCP.} Eu criei o arquivo \texttt{.mcp.json} na raiz do repositório, com um servidor filesystem, como o enunciado pede. Há uma cópia no formato do Cursor. O comando do servidor é o npx do pacote de filesystem.
+
+Eu tentei ligar a ferramenta a esse servidor e rodar um prompt que depende da conexão, no estilo: liste os arquivos alterados no último commit. A conexão não subiu. O npx e o Node não existem nesta máquina, porque eu escolhi não instalá-los no Windows e deixar tudo no Docker. Sem o npx, o Cursor não consegue iniciar o servidor MCP. Travei nesse ponto. O arquivo de configuração ficou no repositório, e este parágrafo registra a tentativa.
+
+\end{document}

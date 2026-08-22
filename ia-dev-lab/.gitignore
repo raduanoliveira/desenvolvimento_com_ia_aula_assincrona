@@ -1,0 +1,9 @@
+/vendor
+/node_modules
+.env
+.phpunit.result.cache
+/backend/vendor
+/backend/.env
+/backend/database/database.sqlite
+/frontend/node_modules
+/frontend/dist
