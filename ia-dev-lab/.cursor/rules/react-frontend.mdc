@@ -1,0 +1,33 @@
+---
+description: Convenções do frontend React com TypeScript, Context API e MUI
+globs: frontend/**
+alwaysApply: false
+---
+
+# Frontend React
+
+- Use TypeScript. Evite `any`.
+- Componentes funcionais.
+- UI com Material UI. O layout deve ser moderno (template Dashboard, cards, hierarquia clara). Prefira componentes do MUI a CSS avulso.
+- Chamadas à API e estado compartilhado da ToDo list ficam no Context API, não em cada tela.
+- Escreva o teste (Testing Library) antes de implementar o comportamento.
+- Tipos de teste: unidade do gateway (`taskApi`); integração do Context; componente (`TaskForm`, `TaskList`, layout Dashboard). Sem E2E.
+- Pastas por funcionalidade (ex.: `features/tasks`), não um amontoado só de `components/` e `hooks/`.
+- POSA Layers no frontend: `DashboardLayout`/`TaskSummary`/`TaskForm`/`TaskList` -> `TaskContext` -> `taskApi.ts`. A tela não faz `fetch`.
+- GoF: o Context funciona como fachada de aplicação para as telas. Não invente Observer/Strategy sem um segundo algoritmo ou efeito colateral.
+
+```tsx
+// ❌ BAD
+function TodoPage() {
+  const [tasks, setTasks] = useState([]);
+  useEffect(() => {
+    fetch("/api/tasks").then((r) => r.json()).then(setTasks);
+  }, []);
+}
+
+// ✅ GOOD
+function TodoPage() {
+  const { tasks, addTask } = useTaskContext();
+  return <TaskList tasks={tasks} onCreate={addTask} />;
+}
+```

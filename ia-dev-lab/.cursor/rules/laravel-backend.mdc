@@ -1,0 +1,39 @@
+---
+description: Convenções do backend Laravel (API, Service, TDD, SOLID)
+globs: backend/**
+alwaysApply: false
+---
+
+# Backend Laravel
+
+- Escreva o teste PHPUnit antes da implementação.
+- Coloque regra de negócio em `app/Services/`. O controller não contém regra de negócio.
+- Use Form Request para validar entrada.
+- Prefira um Service por caso de uso (criar tarefa, concluir tarefa, listar tarefas).
+- SOLID neste backend:
+  - S: controller = HTTP; Service = caso de uso; Repository = persistência.
+  - O: caso de uso novo = classe nova em `app/Services/`, sem inchar classes existentes.
+  - L: `TaskRepositoryInterface` deve ser substituível sem mudar os Services.
+  - I: a interface do repositório só expõe métodos da ToDo list.
+  - D: injete `TaskRepositoryInterface` nos Services; o bind concreto fica no `AppServiceProvider`.
+- POSA Layers: Controller/Request/Resource -> Service -> Repository. O controller não chama Eloquent.
+- GoF neste backend, só se o problema pedir:
+  - Command: um Service por caso de uso, método `handle()`.
+  - Adapter: `EloquentTaskRepository` implementa `TaskRepositoryInterface`.
+  - Factory Method: resolução pelo container; `TaskFactory` nos testes.
+  - Observer/Strategy: não usar ainda; só se aparecer efeito colateral ou mais de um algoritmo.
+
+```php
+// ❌ BAD
+public function store(Request $request)
+{
+    return Task::create($request->all());
+}
+
+// ✅ GOOD
+public function store(StoreTaskRequest $request, CreateTaskService $service)
+{
+    $task = $service->handle($request->validated());
+    return new TaskResource($task);
+}
+```
