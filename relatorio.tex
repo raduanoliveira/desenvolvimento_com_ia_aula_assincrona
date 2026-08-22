@@ -177,8 +177,8 @@ Abri um Pull Request dessa branch para a \texttt{main}, só para praticar o flux
 
 \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona/pull/1}
 
-\textbf{Servidor MCP.} Eu criei o arquivo \texttt{.mcp.json} na raiz do repositório, com um servidor filesystem, como o enunciado pede. Há uma cópia no formato do Cursor. O comando do servidor é o npx do pacote de filesystem.
+\textbf{Servidor MCP.} Eu criei o arquivo \texttt{.mcp.json} na raiz do repositório. Há uma cópia no formato do Cursor. Ficaram dois servidores: filesystem, com npx, e GitHub, com a imagem oficial no Docker.
 
-Eu tentei ligar a ferramenta a esse servidor e rodar um prompt que depende da conexão, no estilo: liste os arquivos alterados no último commit. A conexão não subiu. O npx e o Node não existem nesta máquina, porque eu escolhi não instalá-los no Windows e deixar tudo no Docker. Sem o npx, o Cursor não consegue iniciar o servidor MCP. Travei nesse ponto. O arquivo de configuração ficou no repositório, e este parágrafo registra a tentativa.
+No começo a conexão do filesystem não subiu, porque o npx não existia nesta máquina. Eu instalei o npx no Windows, autorizei os servidores no Cursor e liguei o GitHub no navegador. Com a conexão no ar, pedi: liste os arquivos alterados no último commit. O MCP do GitHub respondeu o commit \texttt{0b82309}, mensagem \emph{Documenta o endereço do Pull Request no relatório.}, e os arquivos \texttt{relatorio.tex} e \texttt{relatorio.pdf}.
 
 \end{document}
