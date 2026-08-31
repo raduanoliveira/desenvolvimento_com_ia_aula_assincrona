@@ -1,0 +1,40 @@
+schema: spec-driven
+
+context: |
+  ToDo em monorepo (ia-dev-lab): API Laravel, tela React + TypeScript + Context API + MUI, Docker.
+  Convenções: TDD; regra de negócio em Service, não no controller nem na tela; persistência atrás de Repository; um caso de uso por Service.
+  Comandos só via docker compose na pasta do laboratório. Não instalar PHP/Node/banco no host. Não versionar segredos.
+  Constituição: ia-dev-lab/.specify/memory/constitution.md e AGENTS.md.
+  Identidade: tarefas pertencem a quem autenticou. Login com Google já deve existir quando esta mudança (GitHub) for proposta; GitHub é um provedor a mais, não um segundo sistema de usuários paralelo.
+  Não vincular a mesma pessoa entre Google e GitHub. Não cadastro e-mail/senha.
+
+# Project context (optional)
+# This is shown to AI when creating artifacts.
+# Add your tech stack, conventions, style guides, domain knowledge, etc.
+# Example:
+#   context: |
+#     Tech stack: TypeScript, React, Node.js
+#     We use conventional commits
+#     Domain: e-commerce platform
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing
