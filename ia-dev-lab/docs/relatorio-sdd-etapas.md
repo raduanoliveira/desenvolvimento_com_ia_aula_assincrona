@@ -78,9 +78,30 @@ Veredito: Google (Spec Kit) e GitHub (OpenSpec) seguiram TDD, regra no Service, 
 
 ## Etapa 6. Git e GitHub
 
-Histórico real de commits do processo e Pull Request aberto para a `main`.
+Eu continuei na branch `feature/setup-inicial` (a mesma da prática anterior) e publiquei o trabalho SDD com commits reais ao longo do processo, não em um único commit final.
 
-(Atualizar com a URL do PR ao publicar.)
+**Pull Request aberto** (sem merge, conforme o enunciado):
+
+https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona/pull/2
+
+Base: `main` ← head: `feature/setup-inicial`. Título atualizado: *Prática SDD: login Google (Spec Kit) e GitHub (OpenSpec)*.
+
+**Commits desta prática SDD** (do mais recente ao mais antigo):
+
+| Hash | Mensagem |
+|---|---|
+| `68c7c76` | Registra os resultados dos testes da prática SDD no relatório. |
+| `f08f2d9` | escrevendo o relatório |
+| `84ac701` | escrevendo o relatorio sobe o Github spec kit |
+| `9316f49` | finalizando o spec-kit |
+| `3871aeb` | tasks.md |
+| `1e1d1fc` | rodado o speckit-plan |
+| `e15f0a6` | adicionando specs |
+| `b14b540` | Ignora a pasta aulas e os auxiliares do LaTeX. |
+
+O PR #1 da prática anterior já foi aceito na `main`. Este PR #2 permanece **aberto** para entrega desta atividade.
+
+**MCP do GitHub (Linux).** Configurei o servidor oficial em `~/.cursor/mcp.json` (imagem Docker `ghcr.io/github/github-mcp-server`, OAuth na porta 8085). Depois pedi para listar os arquivos do último commit; a resposta bateu com o commit `68c7c76`: `relatorio-sdd-etapas.md`, `resultados-testes-sdd.md`, `relatorio-sdd.tex` e `relatorio-sdd.pdf`.
 
 ## Etapa 7. Página única
 

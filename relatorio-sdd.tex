@@ -52,4 +52,10 @@ Código vs spec & Atendeu (2 contas Google) & Atendeu (isolamento e-mail) & = \\
 
 \textbf{3. Uma dificuldade real.} O mais difícil não foi gerar o código. Foi manter o controle humano no meio do SDD. O Spec Kit devolveu um plano longo, e o agente quer seguir em frente. Eu precisei parar no T030, antes da migration que coloca dono nas tarefas, e decidir sozinho: coluna nullable, sem backfill e sem herdar a lista anônima. Na revisão do diff quase deixei passar uma coisa: o isolamento usava \texttt{allForUser}, mas o método \texttt{all()} antigo ainda devolvia todas as tarefas. Se eu não tivesse lido aquilo, a lista global poderia voltar. No fim, o trabalho pesado foi revisar spec, plano e diff, não digitar a implementação.
 
+\vspace{0.1em}
+\hrule
+\vspace{0.3em}
+
+\textbf{Git e GitHub.} PR aberto \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona/pull/2} (\texttt{feature/setup-inicial} $\rightarrow$ \texttt{main}, sem merge). Histórico de commits e detalhe em \path{ia-dev-lab/docs/relatorio-sdd-etapas.md}.
+
 \end{document}
