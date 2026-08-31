@@ -1,6 +1,6 @@
 # Escopo da prática SDD
 
-Projeto: o mesmo ToDo do `ia-dev-lab` (API Laravel, tela React, Docker). Ainda não existe autenticação. A lista de tarefas é global e anônima.
+Projeto: o mesmo ToDo do `ia-dev-lab` da aula assíncrona passada (API Laravel, tela React, Docker, `AGENTS.md` e TDD). Eu mantive o laboratório de propósito, para a evolução da ferramenta ficar clara: antes, ambiente e prompt eficaz; agora, Spec-Driven Development com Spec Kit e OpenSpec, como ensinado em aula. Nesta prática o sistema ainda não tinha autenticação. A lista de tarefas era global e anônima.
 
 ## Funcionalidades escolhidas
 

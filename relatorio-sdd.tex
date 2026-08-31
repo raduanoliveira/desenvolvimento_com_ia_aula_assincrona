@@ -1,0 +1,38 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{xurl}
+
+\pagestyle{empty}
+\singlespacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.35em}
+
+\begin{document}
+
+\begin{center}
+{\bfseries Atividade Prática Assíncrona}\\
+Geomerez Raduan de Oliveira Bandeira
+\end{center}
+
+\vspace{0.15em}
+\hrule
+\vspace{0.4em}
+
+Repositório: \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona}
+
+O texto completo das etapas está em \path{ia-dev-lab/docs/relatorio-sdd-etapas.md}. Nesta página estão os três pontos pedidos no enunciado.
+
+\textbf{1. Funcionalidades e por que SDD.} Eu resolvi usar o mesmo projeto da aula assíncrona passada, o ToDo em \texttt{ia-dev-lab} (Laravel, React, Docker, \texttt{AGENTS.md} e TDD). Quis deixar clara a evolução da ferramenta: primeiro o ambiente e o prompt eficaz; agora o Spec-Driven Development com as tecnologias ensinadas em aula. A funcionalidade que especifiquei e implementei com o Spec Kit foi entrar com Google: a pessoa autentica e passa a ver só as próprias tarefas. É boa para SDD porque tem regra de negócio (dono da tarefa), mexe em vários arquivos (API, sessão e tela) e tem casos de borda que a IA não inventa sozinha: cancelar no provedor, pedido sem sessão, isolamento entre contas e tarefas antigas sem dono. Sem spec, o modelo tende a deixar a lista global e a colocar a regra no controller.
+
+\textbf{2. Abordagem de especificação.} Usei o GitHub Spec Kit. Percorri constitution, specify, plan, tasks e implement. Os artefatos ficaram em \path{ia-dev-lab/specs/001-google-sign-in/}. Na prática o fluxo forçou revisão humana da spec, do plano e do checkpoint T030 (antes da migration que adiciona dono nas tarefas). Os testes usaram provedor fake. Implementei a feature e validei no browser com duas contas Google. Escolhi o Spec Kit porque a constituição do projeto e o domínio de identidade nasceram juntos nesta feature, e o toolkit organiza cada etapa em um arquivo revisável antes do código.
+
+\textbf{3. Uma dificuldade real.} A dificuldade não foi gerar código, e sim manter o controle humano no ciclo do SDD. O Spec Kit montou um plano longo (70 tarefas) e o agente tende a seguir em frente. Eu precisei frear a execução no checkpoint T030, antes da migration que adiciona dono nas tarefas, e decidir sozinho: coluna nullable, sem backfill e sem herdar a lista anônima. Na revisão do diff, quase aceitei o caminho feliz: o isolamento usava \texttt{allForUser}, mas o método \texttt{all()} legado ainda devolvia todas as tarefas. Sem essa leitura eu teria deixado um atalho que reabre a lista global. O que custou mais foi revisar spec, plano e diff, não digitar a implementação.
+
+\end{document}
