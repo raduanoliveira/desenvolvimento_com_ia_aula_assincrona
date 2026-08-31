@@ -1,2 +1,13 @@
+# Material da disciplina (slides e enunciados). Fica na máquina, não vai ao GitHub.
+aulas/
+
+# Sessões locais do Cursor
 _prompt-runs/
-Aula2_Pratica_Assincrona.docx.pdf
+
+# Auxiliares do LaTeX. O relatorio.tex (e o PDF de entrega, se você versionar) continuam no Git.
+*.fdb_latexmk
+*.fls
+*.aux
+*.log
+*.out
+*.toc
