@@ -59,6 +59,17 @@ Implementação: Continuar com GitHub na tela, `CompleteGitHubSignInService` (n�
 
 **Diff que eu revisei (GitHub).** O Service só chama `findByGithubId`; não busca por e-mail. Sem essa leitura, unir contas pelo mesmo e-mail seria o caminho mais curto e quebraria a spec.
 
+## Resultados dos testes (Spec Kit e OpenSpec)
+
+Em 31/08/2026 eu rodei de novo a suíte no Docker e o smoke HTTP. Registro completo: `docs/resultados-testes-sdd.md`.
+
+- Backend: **49 passed** (181 assertions). Frontend: **23 passed**.
+- Sem sessão: `/api/session` e `/api/tasks` → **401**.
+- `/auth/google` e `/auth/github` → **302** para o provedor certo, com callback alinhado ao contrato.
+- Browser: duas contas Google (Spec Kit) e login GitHub (OpenSpec) ok; os dois botões na tela de entrada.
+
+Os testes usam fake (sem internet). O caminho feliz OAuth real usa as chaves só no `.env` local.
+
 ## Conformidade com AGENTS.md
 
 Auditoria das duas implementações: `docs/conformidade-agents.md`.
@@ -73,4 +84,4 @@ Histórico real de commits do processo e Pull Request aberto para a `main`.
 
 ## Etapa 7. Página única
 
-O PDF `relatorio-sdd.pdf` na raiz cobre os três pontos do roteiro, com um resumo da tabela Spec Kit × OpenSpec. A tabela completa (com coluna Preferência) está em `docs/comparativo-speckit-openspec.md`. A dificuldade que eu relato na página única é manter o controle humano no SDD (checkpoint T030 e revisão do diff do `all()` legado). A conformidade com o `AGENTS.md` está detalhada em `docs/conformidade-agents.md`. Este arquivo guarda o restante.
+O PDF `relatorio-sdd.pdf` na raiz cobre os três pontos do roteiro, com um resumo da tabela Spec Kit × OpenSpec. A tabela completa (com coluna Preferência) está em `docs/comparativo-speckit-openspec.md`. Os resultados da bateria de testes (automatizados, smoke HTTP e browser) estão em `docs/resultados-testes-sdd.md`. A dificuldade que eu relato na página única é manter o controle humano no SDD (checkpoint T030 e revisão do diff do `all()` legado). A conformidade com o `AGENTS.md` está detalhada em `docs/conformidade-agents.md`. Este arquivo guarda o restante.
