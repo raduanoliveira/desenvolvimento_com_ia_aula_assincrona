@@ -8,9 +8,14 @@ use Throwable;
 
 class SocialiteIdentityProvider implements IdentityProviderInterface
 {
+    public function __construct(
+        private readonly string $driver = 'google',
+    ) {
+    }
+
     public function redirectUrl(): string
     {
-        return Socialite::driver('google')->redirect()->getTargetUrl();
+        return Socialite::driver($this->driver)->redirect()->getTargetUrl();
     }
 
     public function userFromCallback(Request $request): IdentityUser
@@ -26,15 +31,15 @@ class SocialiteIdentityProvider implements IdentityProviderInterface
         }
 
         try {
-            $googleUser = Socialite::driver('google')->user();
+            $socialUser = Socialite::driver($this->driver)->user();
         } catch (Throwable) {
             throw new IdentityFailedException('provider error');
         }
 
         return new IdentityUser(
-            googleId: (string) $googleUser->getId(),
-            name: (string) ($googleUser->getName() ?: $googleUser->getNickname() ?: $googleUser->getEmail()),
-            email: (string) $googleUser->getEmail(),
+            providerUserId: (string) $socialUser->getId(),
+            name: (string) ($socialUser->getName() ?: $socialUser->getNickname() ?: $socialUser->getEmail()),
+            email: (string) ($socialUser->getEmail() ?? ''),
         );
     }
 }

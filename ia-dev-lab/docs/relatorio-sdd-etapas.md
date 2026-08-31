@@ -51,7 +51,19 @@ Eu parei a execução, li o `quickstart.md` e o `data-model.md`, e aprovei: colu
 
 Ferramenta da segunda feature: OpenSpec, porque a mudança é um delta em brownfield (mais um provedor sobre o que o Spec Kit já criou).
 
-Status desta seção: em andamento. Quando eu concluir propose/apply e a comparação com o Spec Kit, completo aqui os artefatos, o que aprendi e a diferença no código gerado.
+O que eu rodei: `/opsx-propose login-com-github` (proposal, delta spec, design, tasks) e depois `/opsx-apply`. Artefatos em `openspec/changes/login-com-github/`.
+
+Implementação: Continuar com GitHub na tela, `CompleteGitHubSignInService` (não une por e-mail), `github_id` nullable, Google intacto. Testes: backend 49 e frontend 23 no momento da auditoria. Validei no browser.
+
+**Comparação rápida com Spec Kit.** Spec Kit gerou pasta `specs/001-...` com constitution/plan e ~70 tarefas; OpenSpec gerou delta em `openspec/changes/` com tasks mais curtas. Os dois respeitaram o `AGENTS.md` (ver `docs/conformidade-agents.md`).
+
+**Diff que eu revisei (GitHub).** O Service só chama `findByGithubId`; não busca por e-mail. Sem essa leitura, unir contas pelo mesmo e-mail seria o caminho mais curto e quebraria a spec.
+
+## Conformidade com AGENTS.md
+
+Auditoria das duas implementações: `docs/conformidade-agents.md`.
+
+Veredito: Google (Spec Kit) e GitHub (OpenSpec) seguiram TDD, regra no Service, Repository, POSA, SOLID (caso de uso novo = peça nova), frontend Context/MUI sem `fetch` na tela, Docker e sem segredo no git. Ressalva: método `all()` legado no repositório de tarefas.
 
 ## Etapa 6. Git e GitHub
 
@@ -61,4 +73,4 @@ Histórico real de commits do processo e Pull Request aberto para a `main`.
 
 ## Etapa 7. Página única
 
-O PDF `relatorio-sdd.pdf` na raiz cobre os três pontos do roteiro. A dificuldade que eu relato na página única é manter o controle humano no SDD (checkpoint T030 e revisão do diff do `all()` legado), não a configuração de conta no Google Cloud. Este arquivo guarda o restante.
+O PDF `relatorio-sdd.pdf` na raiz cobre os três pontos do roteiro, com um resumo da tabela Spec Kit × OpenSpec. A tabela completa (com coluna Preferência) está em `docs/comparativo-speckit-openspec.md`. A dificuldade que eu relato na página única é manter o controle humano no SDD (checkpoint T030 e revisão do diff do `all()` legado). A conformidade com o `AGENTS.md` está detalhada em `docs/conformidade-agents.md`. Este arquivo guarda o restante.

@@ -1,4 +1,4 @@
-import { endSession, getSession } from "./authApi";
+import { endSession, getSession, githubStartUrl, googleStartUrl } from "./authApi";
 
 describe("authApi", () => {
   afterEach(() => {
@@ -54,5 +54,11 @@ describe("authApi", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     expect(await getSession()).toBeNull();
+  });
+
+  it("expõe githubStartUrl no mesmo host que o Google, sem /api", () => {
+    expect(githubStartUrl).toBe("http://localhost:8000/auth/github");
+    expect(googleStartUrl).toBe("http://localhost:8000/auth/google");
+    expect(githubStartUrl).not.toContain("/api/");
   });
 });

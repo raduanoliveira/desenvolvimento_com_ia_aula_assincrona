@@ -6,12 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Identity\IdentityCancelledException;
 use App\Identity\IdentityFailedException;
 use App\Identity\IdentityProviderInterface;
-use App\Services\CompleteGoogleSignInService;
+use App\Services\CompleteGitHubSignInService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class GoogleAuthController extends Controller
+class GitHubAuthController extends Controller
 {
     public function __construct(
         private readonly IdentityProviderInterface $provider,
@@ -25,7 +25,7 @@ class GoogleAuthController extends Controller
 
     public function callback(
         Request $request,
-        CompleteGoogleSignInService $completeGoogleSignIn,
+        CompleteGitHubSignInService $completeGitHubSignIn,
     ): RedirectResponse {
         $home = rtrim((string) config('services.frontend.url'), '/');
 
@@ -37,7 +37,7 @@ class GoogleAuthController extends Controller
             return redirect()->away($home.'/?signin=error');
         }
 
-        $user = $completeGoogleSignIn->handle($identity);
+        $user = $completeGitHubSignIn->handle($identity);
 
         Auth::login($user);
         $request->session()->regenerate();

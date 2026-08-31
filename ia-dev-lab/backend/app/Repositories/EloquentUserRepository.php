@@ -12,6 +12,11 @@ class EloquentUserRepository implements UserRepositoryInterface
         return User::query()->where('google_id', $googleId)->first();
     }
 
+    public function findByGithubId(string $githubId): ?User
+    {
+        return User::query()->where('github_id', $githubId)->first();
+    }
+
     public function create(array $data): User
     {
         return User::query()->create($data);

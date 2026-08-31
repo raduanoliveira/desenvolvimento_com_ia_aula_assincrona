@@ -6,7 +6,7 @@ use App\Identity\IdentityUser;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
 
-class CompleteGoogleSignInService
+class CompleteGitHubSignInService
 {
     public function __construct(private readonly UserRepositoryInterface $users)
     {
@@ -14,14 +14,14 @@ class CompleteGoogleSignInService
 
     public function handle(IdentityUser $identity): User
     {
-        $existing = $this->users->findByGoogleId($identity->providerUserId);
+        $existing = $this->users->findByGithubId($identity->providerUserId);
 
         if ($existing !== null) {
             return $existing;
         }
 
         return $this->users->create([
-            'google_id' => $identity->providerUserId,
+            'github_id' => $identity->providerUserId,
             'name' => $identity->name,
             'email' => $identity->email,
         ]);

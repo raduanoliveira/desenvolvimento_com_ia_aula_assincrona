@@ -18,7 +18,7 @@ class FakeIdentityProvider implements IdentityProviderInterface
         private ?IdentityUser $user = null,
     ) {
         $this->user ??= new IdentityUser(
-            googleId: 'google-user-1',
+            providerUserId: 'google-user-1',
             name: 'Ana Silva',
             email: 'ana@example.com',
         );

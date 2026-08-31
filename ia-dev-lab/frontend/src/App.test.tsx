@@ -8,6 +8,7 @@ vi.mock("./features/auth/authApi", () => ({
   getSession: vi.fn(),
   endSession: vi.fn(),
   googleStartUrl: "http://localhost:8000/auth/google",
+  githubStartUrl: "http://localhost:8000/auth/github",
 }));
 
 vi.mock("./features/tasks/taskApi");
@@ -27,6 +28,7 @@ describe("App", () => {
     renderApp();
 
     expect(await screen.findByRole("link", { name: /continuar com google/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /continuar com github/i })).toBeInTheDocument();
     expect(screen.queryByText("Nova tarefa")).not.toBeInTheDocument();
     expect(screen.queryByText("Minhas tarefas")).not.toBeInTheDocument();
     expect(api.listTasks).not.toHaveBeenCalled();
@@ -65,6 +67,7 @@ describe("App", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Sair" }));
 
     expect(await screen.findByRole("link", { name: /continuar com google/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /continuar com github/i })).toBeInTheDocument();
     expect(screen.queryByText("Minhas tarefas")).not.toBeInTheDocument();
     expect(authApi.endSession).toHaveBeenCalledTimes(1);
   });

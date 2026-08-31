@@ -1,3 +1,4 @@
+import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
@@ -10,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import { useAuthContext } from "./AuthContext";
 
 export function SignInScreen() {
-  const { error, googleStartUrl } = useAuthContext();
+  const { error, googleStartUrl, githubStartUrl } = useAuthContext();
 
   return (
     <Box
@@ -31,7 +32,7 @@ export function SignInScreen() {
               Entre para ver as suas tarefas
             </Typography>
             <Typography sx={{ mt: 1.5, color: "rgba(255,255,255,0.82)", fontSize: "1.05rem" }}>
-              Só você vê e altera a sua lista. Continuar com a conta Google.
+              Só você vê e altera a sua lista. Continuar com Google ou com GitHub — as contas não se misturam.
             </Typography>
           </Box>
           <Card sx={{ borderRadius: 4, boxShadow: 8 }}>
@@ -50,6 +51,15 @@ export function SignInScreen() {
                   fullWidth
                 >
                   Continuar com Google
+                </Button>
+                <Button
+                  href={githubStartUrl}
+                  variant="outlined"
+                  size="large"
+                  startIcon={<GitHubIcon />}
+                  fullWidth
+                >
+                  Continuar com GitHub
                 </Button>
               </Stack>
             </CardContent>

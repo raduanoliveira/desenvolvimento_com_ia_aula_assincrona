@@ -3,6 +3,7 @@ import type { SessionUser } from "./types";
 const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:8000/api";
 
 export const googleStartUrl = `${apiUrl.replace(/\/api\/?$/, "")}/auth/google`;
+export const githubStartUrl = `${apiUrl.replace(/\/api\/?$/, "")}/auth/github`;
 
 async function parseError(response: Response): Promise<Error> {
   return new Error(`HTTP ${response.status}`);

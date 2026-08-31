@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Identity\FakeIdentityProvider;
 use App\Identity\IdentityProviderInterface;
 use App\Models\User;
@@ -50,10 +51,9 @@ class GoogleAuthTest extends TestCase
 
     public function test_cancelled_consent_stays_disconnected_and_redirects_with_query(): void
     {
-        $this->app->instance(
-            IdentityProviderInterface::class,
-            new FakeIdentityProvider(mode: FakeIdentityProvider::MODE_CANCELLED),
-        );
+        $this->app->when(GoogleAuthController::class)
+            ->needs(IdentityProviderInterface::class)
+            ->give(fn () => new FakeIdentityProvider(mode: FakeIdentityProvider::MODE_CANCELLED));
 
         $this->get('/auth/google/callback')
             ->assertRedirect('http://localhost:5173/?signin=cancelled');
@@ -64,10 +64,9 @@ class GoogleAuthTest extends TestCase
 
     public function test_provider_error_stays_disconnected_and_redirects_with_query(): void
     {
-        $this->app->instance(
-            IdentityProviderInterface::class,
-            new FakeIdentityProvider(mode: FakeIdentityProvider::MODE_ERROR),
-        );
+        $this->app->when(GoogleAuthController::class)
+            ->needs(IdentityProviderInterface::class)
+            ->give(fn () => new FakeIdentityProvider(mode: FakeIdentityProvider::MODE_ERROR));
 
         $this->get('/auth/google/callback')
             ->assertRedirect('http://localhost:5173/?signin=error');
@@ -78,10 +77,9 @@ class GoogleAuthTest extends TestCase
 
     public function test_callback_error_bodies_and_redirects_never_leak_google_secrets(): void
     {
-        $this->app->instance(
-            IdentityProviderInterface::class,
-            new FakeIdentityProvider(mode: FakeIdentityProvider::MODE_ERROR),
-        );
+        $this->app->when(GoogleAuthController::class)
+            ->needs(IdentityProviderInterface::class)
+            ->give(fn () => new FakeIdentityProvider(mode: FakeIdentityProvider::MODE_ERROR));
 
         $response = $this->get('/auth/google/callback');
         $payload = $response->headers->get('Location').$response->getContent();

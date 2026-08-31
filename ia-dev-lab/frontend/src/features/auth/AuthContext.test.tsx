@@ -6,6 +6,7 @@ vi.mock("./authApi", () => ({
   getSession: vi.fn(),
   endSession: vi.fn(),
   googleStartUrl: "http://localhost:8000/auth/google",
+  githubStartUrl: "http://localhost:8000/auth/github",
 }));
 
 function Probe() {
@@ -88,8 +89,9 @@ describe("AuthContext", () => {
       </AuthProvider>
     );
 
-    expect(await screen.findByText("error:A entrada com Google não foi concluída.")).toBeInTheDocument();
+    expect(await screen.findByText("error:A entrada não foi concluída.")).toBeInTheDocument();
     expect(screen.getByText("status:signedOut")).toBeInTheDocument();
+    expect(screen.queryByText("Nova tarefa")).not.toBeInTheDocument();
   });
 
   it("mostra mensagem clara quando a URL tem signin=error", async () => {
@@ -102,7 +104,8 @@ describe("AuthContext", () => {
       </AuthProvider>
     );
 
-    expect(await screen.findByText("error:Não foi possível entrar com o Google. Tente de novo.")).toBeInTheDocument();
+    expect(await screen.findByText("error:Não foi possível entrar. Tente de novo.")).toBeInTheDocument();
     expect(screen.getByText("status:signedOut")).toBeInTheDocument();
+    expect(screen.queryByText("Nova tarefa")).not.toBeInTheDocument();
   });
 });

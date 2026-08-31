@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { endSession, getSession, googleStartUrl } from "./authApi";
+import { endSession, getSession, githubStartUrl, googleStartUrl } from "./authApi";
 import type { SessionUser } from "./types";
 
 export type AuthStatus = "loading" | "signedOut" | "signedIn";
@@ -17,6 +17,7 @@ export type AuthContextValue = {
   status: AuthStatus;
   error: string | null;
   googleStartUrl: string;
+  githubStartUrl: string;
   signOut: () => Promise<void>;
 };
 
@@ -25,10 +26,10 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 function messageFromSignInQuery(search: string): string | null {
   const signin = new URLSearchParams(search).get("signin");
   if (signin === "cancelled") {
-    return "A entrada com Google não foi concluída.";
+    return "A entrada não foi concluída.";
   }
   if (signin === "error") {
-    return "Não foi possível entrar com o Google. Tente de novo.";
+    return "Não foi possível entrar. Tente de novo.";
   }
   return null;
 }
@@ -63,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .catch(() => {
         setUser(null);
         setStatus("signedOut");
-        setError((current) => current ?? "Não foi possível entrar com o Google. Tente de novo.");
+        setError((current) => current ?? "Não foi possível entrar. Tente de novo.");
       });
   }, []);
 
@@ -75,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ user, status, error, googleStartUrl, signOut }),
+    () => ({ user, status, error, googleStartUrl, githubStartUrl, signOut }),
     [user, status, error, signOut]
   );
 

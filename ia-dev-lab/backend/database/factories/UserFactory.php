@@ -16,8 +16,17 @@ class UserFactory extends Factory
     {
         return [
             'google_id' => fake()->unique()->numerify('google-########'),
+            'github_id' => null,
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
         ];
+    }
+
+    public function github(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'google_id' => null,
+            'github_id' => fake()->unique()->numerify('github-########'),
+        ]);
     }
 }

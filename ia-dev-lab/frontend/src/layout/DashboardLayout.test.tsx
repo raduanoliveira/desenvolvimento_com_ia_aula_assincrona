@@ -14,6 +14,7 @@ describe("DashboardLayout", () => {
       status: "signedIn",
       error: null,
       googleStartUrl: "http://localhost:8000/auth/google",
+      githubStartUrl: "http://localhost:8000/auth/github",
       signOut,
     });
 

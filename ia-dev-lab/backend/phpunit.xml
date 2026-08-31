@@ -34,5 +34,8 @@
         <env name="GOOGLE_CLIENT_ID" value="test-google-client-id"/>
         <env name="GOOGLE_CLIENT_SECRET" value="test-google-client-secret"/>
         <env name="GOOGLE_REDIRECT_URI" value="http://localhost:8000/auth/google/callback"/>
+        <env name="GITHUB_CLIENT_ID" value="test-github-client-id"/>
+        <env name="GITHUB_CLIENT_SECRET" value="test-github-client-secret"/>
+        <env name="GITHUB_REDIRECT_URI" value="http://localhost:8000/auth/github/callback"/>
     </php>
 </phpunit>
