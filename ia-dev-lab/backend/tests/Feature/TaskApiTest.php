@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -10,22 +11,41 @@ class TaskApiTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
+    }
+
     public function test_it_lists_tasks(): void
     {
-        Task::factory()->create(['title' => 'Estudar TDD']);
+        Task::factory()->create([
+            'title' => 'Estudar TDD',
+            'user_id' => $this->user->id,
+        ]);
 
         $this->getJson('/api/tasks')
             ->assertOk()
-            ->assertJsonFragment(['title' => 'Estudar TDD']);
+            ->assertJsonFragment(['title' => 'Estudar TDD'])
+            ->assertJsonMissingPath('data.0.user_id');
     }
 
     public function test_it_creates_a_task(): void
     {
         $this->postJson('/api/tasks', ['title' => 'Comprar pão'])
             ->assertCreated()
-            ->assertJsonFragment(['title' => 'Comprar pão', 'done' => false]);
+            ->assertJsonFragment(['title' => 'Comprar pão', 'done' => false])
+            ->assertJsonMissingPath('data.user_id');
 
-        $this->assertDatabaseHas('tasks', ['title' => 'Comprar pão', 'done' => false]);
+        $this->assertDatabaseHas('tasks', [
+            'title' => 'Comprar pão',
+            'done' => false,
+            'user_id' => $this->user->id,
+        ]);
     }
 
     public function test_it_rejects_empty_title(): void
@@ -36,7 +56,10 @@ class TaskApiTest extends TestCase
 
     public function test_it_toggles_a_task(): void
     {
-        $task = Task::factory()->create(['done' => false]);
+        $task = Task::factory()->create([
+            'done' => false,
+            'user_id' => $this->user->id,
+        ]);
 
         $this->patchJson("/api/tasks/{$task->id}/toggle")
             ->assertOk()
@@ -45,7 +68,7 @@ class TaskApiTest extends TestCase
 
     public function test_it_deletes_a_task(): void
     {
-        $task = Task::factory()->create();
+        $task = Task::factory()->create(['user_id' => $this->user->id]);
 
         $this->deleteJson("/api/tasks/{$task->id}")
             ->assertNoContent();
@@ -55,8 +78,14 @@ class TaskApiTest extends TestCase
 
     public function test_it_archives_a_task_and_omits_it_from_the_active_list(): void
     {
-        $task = Task::factory()->create(['title' => 'Arquivar esta']);
-        Task::factory()->create(['title' => 'Continua ativa']);
+        $task = Task::factory()->create([
+            'title' => 'Arquivar esta',
+            'user_id' => $this->user->id,
+        ]);
+        Task::factory()->create([
+            'title' => 'Continua ativa',
+            'user_id' => $this->user->id,
+        ]);
 
         $this->patchJson("/api/tasks/{$task->id}/archive")
             ->assertOk()

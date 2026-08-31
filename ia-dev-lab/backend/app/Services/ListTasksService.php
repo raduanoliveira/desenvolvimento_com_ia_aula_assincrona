@@ -12,9 +12,9 @@ class ListTasksService
     {
     }
 
-    public function handle(): Collection
+    public function handle(int $ownerId): Collection
     {
-        return $this->tasks->all()
+        return $this->tasks->allForUser($ownerId)
             ->filter(fn (Task $task) => ! $task->archived)
             ->values();
     }

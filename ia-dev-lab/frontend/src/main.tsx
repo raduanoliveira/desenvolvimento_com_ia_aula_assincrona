@@ -3,16 +3,16 @@ import { ThemeProvider } from "@mui/material/styles";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
-import { TaskProvider } from "./features/tasks/TaskContext";
+import { AuthProvider } from "./features/auth/AuthContext";
 import theme from "./theme";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <TaskProvider>
+      <AuthProvider>
         <App />
-      </TaskProvider>
+      </AuthProvider>
     </ThemeProvider>
   </StrictMode>
 );

@@ -1,7 +1,11 @@
-import { archiveTask, createTask } from "./taskApi";
+import { archiveTask, createTask, listTasks } from "./taskApi";
 
 describe("taskApi", () => {
-  it("envia POST para criar tarefa", async () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("envia POST para criar tarefa com credentials include", async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ data: { id: 1, title: "Comprar pão", done: false } }),
@@ -13,13 +17,11 @@ describe("taskApi", () => {
     expect(task.title).toBe("Comprar pão");
     expect(fetchMock).toHaveBeenCalledWith(
       expect.stringContaining("/tasks"),
-      expect.objectContaining({ method: "POST" })
+      expect.objectContaining({ method: "POST", credentials: "include" })
     );
-
-    vi.unstubAllGlobals();
   });
 
-  it("envia PATCH para arquivar tarefa", async () => {
+  it("envia PATCH para arquivar tarefa com credentials include", async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -33,9 +35,22 @@ describe("taskApi", () => {
     expect(task.archived).toBe(true);
     expect(fetchMock).toHaveBeenCalledWith(
       expect.stringContaining("/tasks/3/archive"),
-      expect.objectContaining({ method: "PATCH" })
+      expect.objectContaining({ method: "PATCH", credentials: "include" })
     );
+  });
 
-    vi.unstubAllGlobals();
+  it("envia GET para listar tarefas com credentials include", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ data: [] }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await listTasks();
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("/tasks"),
+      expect.objectContaining({ credentials: "include" })
+    );
   });
 });

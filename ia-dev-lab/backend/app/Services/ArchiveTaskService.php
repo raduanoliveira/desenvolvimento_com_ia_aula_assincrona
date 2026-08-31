@@ -12,9 +12,9 @@ class ArchiveTaskService
     {
     }
 
-    public function handle(int $id): Task
+    public function handle(int $id, int $ownerId): Task
     {
-        $task = $this->tasks->find($id);
+        $task = $this->tasks->findForUser($id, $ownerId);
 
         if ($task === null) {
             throw (new ModelNotFoundException())->setModel(Task::class, [$id]);
