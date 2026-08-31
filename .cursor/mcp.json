@@ -1,12 +1,31 @@
 {
   "mcpServers": {
     "filesystem": {
-      "command": "npx",
+      "type": "stdio",
+      "command": "cmd",
       "args": [
+        "/c",
+        "${env:LOCALAPPDATA}\\nodejs\\node-v24.19.0-win-x64\\npx.cmd",
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "."
+        "${workspaceFolder}"
       ]
+    },
+    "github": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-p",
+        "127.0.0.1:8085:8085",
+        "-e",
+        "GITHUB_OAUTH_CALLBACK_PORT",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "env": {
+        "GITHUB_OAUTH_CALLBACK_PORT": "8085"
+      }
     }
   }
 }

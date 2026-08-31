@@ -16,12 +16,13 @@ class ListTasksServiceTest extends TestCase
         $active = new Task(['title' => 'Continua ativa', 'done' => false, 'archived' => false]);
         $archived = new Task(['title' => 'Já arquivada', 'done' => false, 'archived' => true]);
 
-        $repository->shouldReceive('all')
+        $repository->shouldReceive('allForUser')
             ->once()
+            ->with(42)
             ->andReturn(collect([$active, $archived]));
 
         $service = new ListTasksService($repository);
-        $result = $service->handle();
+        $result = $service->handle(42);
 
         $this->assertCount(1, $result);
         $this->assertSame('Continua ativa', $result->first()->title);

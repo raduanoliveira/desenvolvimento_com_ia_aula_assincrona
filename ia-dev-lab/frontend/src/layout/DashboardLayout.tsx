@@ -2,6 +2,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
@@ -9,6 +10,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import type { ReactNode } from "react";
+import { useAuthContext } from "../features/auth/AuthContext";
 
 export function DashboardLayout({
   title,
@@ -19,6 +21,10 @@ export function DashboardLayout({
   subtitle?: string;
   children: ReactNode;
 }) {
+  const { user, signOut } = useAuthContext();
+  const label = user?.name || user?.email || "Conta";
+  const initial = label.charAt(0).toUpperCase();
+
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
       <Box
@@ -43,9 +49,15 @@ export function DashboardLayout({
               />
             </Stack>
             <Chip label="Online" size="small" sx={{ bgcolor: "#fff", mr: 1.5 }} />
-            <Tooltip title="Conta">
-              <Avatar sx={{ bgcolor: "#22d3ee", color: "#0f172a" }}>T</Avatar>
+            <Typography color="common.white" sx={{ mr: 1.5 }}>
+              {label}
+            </Typography>
+            <Tooltip title={label}>
+              <Avatar sx={{ bgcolor: "#22d3ee", color: "#0f172a", mr: 1.5 }}>{initial}</Avatar>
             </Tooltip>
+            <Button color="inherit" onClick={() => void signOut()} sx={{ color: "#fff" }}>
+              Sair
+            </Button>
           </Toolbar>
         </AppBar>
         <Container maxWidth="md" sx={{ pt: 4 }}>

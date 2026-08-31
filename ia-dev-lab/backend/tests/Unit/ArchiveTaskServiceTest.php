@@ -16,9 +16,9 @@ class ArchiveTaskServiceTest extends TestCase
         $task = new Task(['title' => 'Relatório da aula', 'done' => false, 'archived' => false]);
         $archived = new Task(['title' => 'Relatório da aula', 'done' => false, 'archived' => true]);
 
-        $repository->shouldReceive('find')
+        $repository->shouldReceive('findForUser')
             ->once()
-            ->with(7)
+            ->with(7, 42)
             ->andReturn($task);
 
         $repository->shouldReceive('update')
@@ -29,7 +29,7 @@ class ArchiveTaskServiceTest extends TestCase
         $repository->shouldNotReceive('delete');
 
         $service = new ArchiveTaskService($repository);
-        $result = $service->handle(7);
+        $result = $service->handle(7, 42);
 
         $this->assertTrue($result->archived);
         $this->assertSame('Relatório da aula', $result->title);

@@ -11,11 +11,12 @@ class CreateTaskService
     {
     }
 
-    public function handle(array $payload): Task
+    public function handle(array $payload, int $ownerId): Task
     {
         return $this->tasks->create([
             'title' => trim($payload['title']),
             'done' => false,
+            'user_id' => $ownerId,
         ]);
     }
 }

@@ -12,9 +12,9 @@ class DeleteTaskService
     {
     }
 
-    public function handle(int $id): void
+    public function handle(int $id, int $ownerId): void
     {
-        $task = $this->tasks->find($id);
+        $task = $this->tasks->findForUser($id, $ownerId);
 
         if ($task === null) {
             throw (new ModelNotFoundException())->setModel(Task::class, [$id]);

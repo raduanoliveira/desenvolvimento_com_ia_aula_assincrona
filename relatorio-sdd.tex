@@ -1,0 +1,55 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage{booktabs}
+\usepackage{array}
+
+\pagestyle{empty}
+\singlespacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.3em}
+
+\begin{document}
+
+\begin{center}
+{\bfseries Atividade Prática Assíncrona}\\
+Geomerez Raduan de Oliveira Bandeira
+\end{center}
+
+\vspace{0.1em}
+\hrule
+\vspace{0.35em}
+
+Repositório: \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona}
+
+O detalhe das etapas está em \path{ia-dev-lab/docs/relatorio-sdd-etapas.md}. Aqui estão os três pontos do enunciado.
+
+\textbf{1. Funcionalidades e por que SDD.} Eu preferi continuar no mesmo ToDo da aula passada, o \texttt{ia-dev-lab}, com Laravel, React, Docker e o \texttt{AGENTS.md}. Queria que ficasse clara a evolução: antes eu configurei o ambiente e pratiquei prompt; agora pratiquei Spec-Driven Development com as ferramentas da disciplina. As features novas foram entrar com Google e entrar com GitHub. Em ambas, a pessoa autentica e vê só as próprias tarefas, e as duas contas não se misturam. Achei um bom caso para SDD porque tem regra de negócio (dono da tarefa), mexe em vários arquivos e tem bordas que a IA costuma ignorar: cancelar no provedor, pedido sem sessão, isolamento entre pessoas e tarefas antigas sem dono. Sem spec, o modelo tende a deixar a lista global e a jogar a regra no controller.
+
+\textbf{2. Abordagens de especificação.} No Google eu usei o Spec Kit: constitution, specify, plan, tasks e implement. Os arquivos ficaram em \path{ia-dev-lab/specs/001-google-sign-in/}. Eu revisei a spec e o plano, parei no checkpoint T030 e só então segui. Testei no browser com duas contas Google. No GitHub eu usei o OpenSpec, com \texttt{/opsx-propose} e \texttt{/opsx-apply}, porque a mudança era um delta: o domínio de identidade já existia. Os artefatos estão em \path{ia-dev-lab/openspec/changes/login-com-github/}. As duas implementações respeitaram o \texttt{AGENTS.md}; eu documentei isso em \path{ia-dev-lab/docs/conformidade-agents.md}. No fim eu rodei de novo os testes no Docker: 49 no backend e 23 no frontend, todos passando; sem sessão a API responde 401, e os redirects do Google e do GitHub apontam para o callback certo. O registro dessa bateria está em \path{ia-dev-lab/docs/resultados-testes-sdd.md}. Abaixo vai um resumo da comparação. A tabela completa, com mais dimensões e a coluna de preferência, está em \path{ia-dev-lab/docs/comparativo-speckit-openspec.md}.
+
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{3.6cm}>{\centering\arraybackslash}p{1.5cm}@{}}
+\toprule
+Dimensão & Spec Kit & OpenSpec & Pref. \\
+\midrule
+Cenário & Domínio novo (identidade) & Delta (mais um provedor) & = \\
+Tarefas & $\sim$70, bem fatiadas & $\sim$8 grupos, reuso & SK / OS \\
+Checkpoint & T030 explícito & Sem freio de dono em tasks & SK \\
+\texttt{AGENTS.md} & Instaurou o padrão & Protegeu o padrão & = \\
+Código vs spec & Atendeu (2 contas Google) & Atendeu (isolamento e-mail) & = \\
+\bottomrule
+\end{tabular}
+}
+
+\textbf{3. Uma dificuldade real.} O mais difícil não foi gerar o código. Foi manter o controle humano no meio do SDD. O Spec Kit devolveu um plano longo, e o agente quer seguir em frente. Eu precisei parar no T030, antes da migration que coloca dono nas tarefas, e decidir sozinho: coluna nullable, sem backfill e sem herdar a lista anônima. Na revisão do diff quase deixei passar uma coisa: o isolamento usava \texttt{allForUser}, mas o método \texttt{all()} antigo ainda devolvia todas as tarefas. Se eu não tivesse lido aquilo, a lista global poderia voltar. No fim, o trabalho pesado foi revisar spec, plano e diff, não digitar a implementação.
+
+\end{document}
