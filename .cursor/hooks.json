@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": "node .cursor/hooks/block-db-destruction.mjs",
+        "failClosed": true
+      }
+    ],
+    "preToolUse": [
+      {
+        "command": "node .cursor/hooks/block-db-destruction.mjs",
+        "matcher": "Delete|Shell",
+        "failClosed": true
+      }
+    ]
+  }
+}

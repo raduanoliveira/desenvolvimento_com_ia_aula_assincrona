@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
@@ -13,6 +14,9 @@ class Task extends Model
         'title',
         'done',
         'archived',
+        'due_date',
+        'user_id',
+        'priority',
     ];
 
     protected function casts(): array
@@ -20,6 +24,12 @@ class Task extends Model
         return [
             'done' => 'boolean',
             'archived' => 'boolean',
+            'due_date' => 'date:Y-m-d',
         ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

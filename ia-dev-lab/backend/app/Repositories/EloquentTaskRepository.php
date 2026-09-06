@@ -2,37 +2,84 @@
 
 namespace App\Repositories;
 
-use App\Models\Task;
+use App\Domain\Task as DomainTask;
+use App\Models\Task as EloquentTask;
 use App\Repositories\Contracts\TaskRepositoryInterface;
+use Carbon\CarbonInterface;
 use Illuminate\Support\Collection;
 
 class EloquentTaskRepository implements TaskRepositoryInterface
 {
     public function all(): Collection
     {
-        return Task::query()->orderByDesc('id')->get();
+        return EloquentTask::query()
+            ->orderByDesc('id')
+            ->get()
+            ->map(fn (EloquentTask $task) => $this->toDomain($task))
+            ->values();
     }
 
-    public function create(array $data): Task
+    public function allForUser(int $userId): Collection
     {
-        return Task::query()->create($data);
+        return EloquentTask::query()
+            ->where('user_id', $userId)
+            ->orderByDesc('id')
+            ->get()
+            ->map(fn (EloquentTask $task) => $this->toDomain($task))
+            ->values();
     }
 
-    public function find(int $id): ?Task
+    public function create(array $data): DomainTask
     {
-        return Task::query()->find($id);
+        return $this->toDomain(EloquentTask::query()->create($data));
     }
 
-    public function update(Task $task, array $data): Task
+    public function find(int $id): ?DomainTask
     {
-        $task->fill($data);
-        $task->save();
+        $task = EloquentTask::query()->find($id);
 
-        return $task;
+        return $task === null ? null : $this->toDomain($task);
     }
 
-    public function delete(Task $task): void
+    public function findForUser(int $id, int $userId): ?DomainTask
     {
-        $task->delete();
+        $task = EloquentTask::query()
+            ->whereKey($id)
+            ->where('user_id', $userId)
+            ->first();
+
+        return $task === null ? null : $this->toDomain($task);
+    }
+
+    public function update(DomainTask $task, array $data): DomainTask
+    {
+        $model = EloquentTask::query()->findOrFail($task->id);
+        $model->fill($data);
+        $model->save();
+
+        return $this->toDomain($model);
+    }
+
+    public function delete(DomainTask $task): void
+    {
+        EloquentTask::query()->whereKey($task->id)->delete();
+    }
+
+    private function toDomain(EloquentTask $task): DomainTask
+    {
+        $dueDate = $task->due_date;
+
+        return new DomainTask(
+            id: (int) $task->id,
+            title: (string) $task->title,
+            done: (bool) $task->done,
+            archived: (bool) $task->archived,
+            due_date: $dueDate === null
+                ? null
+                : ($dueDate instanceof CarbonInterface ? $dueDate->toDateString() : (string) $dueDate),
+            priority: (string) ($task->priority ?? 'medium'),
+            user_id: (int) $task->user_id,
+            created_at: $task->created_at,
+        );
     }
 }

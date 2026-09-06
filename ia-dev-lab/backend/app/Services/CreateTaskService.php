@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Task;
+use App\Domain\Task;
 use App\Repositories\Contracts\TaskRepositoryInterface;
 
 class CreateTaskService
@@ -11,11 +11,14 @@ class CreateTaskService
     {
     }
 
-    public function handle(array $payload): Task
+    public function handle(array $payload, int $ownerId): Task
     {
         return $this->tasks->create([
             'title' => trim($payload['title']),
             'done' => false,
+            'user_id' => $ownerId,
+            'due_date' => $payload['due_date'] ?? null,
+            'priority' => $payload['priority'] ?? 'medium',
         ]);
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -10,22 +11,71 @@ class TaskApiTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
+    }
+
     public function test_it_lists_tasks(): void
     {
-        Task::factory()->create(['title' => 'Estudar TDD']);
+        Task::factory()->create([
+            'title' => 'Estudar TDD',
+            'user_id' => $this->user->id,
+        ]);
 
         $this->getJson('/api/tasks')
             ->assertOk()
-            ->assertJsonFragment(['title' => 'Estudar TDD']);
+            ->assertJsonFragment(['title' => 'Estudar TDD'])
+            ->assertJsonMissingPath('data.0.user_id');
+    }
+
+    public function test_it_lists_tasks_filtered_by_status(): void
+    {
+        Task::factory()->create([
+            'title' => 'Ainda pendente',
+            'done' => false,
+            'user_id' => $this->user->id,
+        ]);
+        Task::factory()->create([
+            'title' => 'Já concluída',
+            'done' => true,
+            'user_id' => $this->user->id,
+        ]);
+
+        $this->getJson('/api/tasks?status=pending')
+            ->assertOk()
+            ->assertJsonFragment(['title' => 'Ainda pendente'])
+            ->assertJsonMissing(['title' => 'Já concluída']);
+
+        $this->getJson('/api/tasks?status=done')
+            ->assertOk()
+            ->assertJsonFragment(['title' => 'Já concluída'])
+            ->assertJsonMissing(['title' => 'Ainda pendente']);
+    }
+
+    public function test_it_rejects_invalid_status_filter(): void
+    {
+        $this->getJson('/api/tasks?status=arquivadas')
+            ->assertUnprocessable();
     }
 
     public function test_it_creates_a_task(): void
     {
         $this->postJson('/api/tasks', ['title' => 'Comprar pão'])
             ->assertCreated()
-            ->assertJsonFragment(['title' => 'Comprar pão', 'done' => false]);
+            ->assertJsonFragment(['title' => 'Comprar pão', 'done' => false, 'due_date' => null])
+            ->assertJsonMissingPath('data.user_id');
 
-        $this->assertDatabaseHas('tasks', ['title' => 'Comprar pão', 'done' => false]);
+        $this->assertDatabaseHas('tasks', [
+            'title' => 'Comprar pão',
+            'done' => false,
+            'user_id' => $this->user->id,
+        ]);
     }
 
     public function test_it_rejects_empty_title(): void
@@ -36,7 +86,10 @@ class TaskApiTest extends TestCase
 
     public function test_it_toggles_a_task(): void
     {
-        $task = Task::factory()->create(['done' => false]);
+        $task = Task::factory()->create([
+            'done' => false,
+            'user_id' => $this->user->id,
+        ]);
 
         $this->patchJson("/api/tasks/{$task->id}/toggle")
             ->assertOk()
@@ -45,7 +98,7 @@ class TaskApiTest extends TestCase
 
     public function test_it_deletes_a_task(): void
     {
-        $task = Task::factory()->create();
+        $task = Task::factory()->create(['user_id' => $this->user->id]);
 
         $this->deleteJson("/api/tasks/{$task->id}")
             ->assertNoContent();
@@ -53,10 +106,146 @@ class TaskApiTest extends TestCase
         $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
     }
 
+    public function test_it_creates_a_task_with_high_priority(): void
+    {
+        $this->postJson('/api/tasks', [
+            'title' => 'Entrega urgente',
+            'priority' => 'high',
+        ])
+            ->assertCreated()
+            ->assertJsonFragment([
+                'title' => 'Entrega urgente',
+                'priority' => 'high',
+            ]);
+
+        $this->assertDatabaseHas('tasks', [
+            'title' => 'Entrega urgente',
+            'priority' => 'high',
+            'user_id' => $this->user->id,
+        ]);
+    }
+
+    public function test_it_defaults_created_task_priority_to_medium(): void
+    {
+        $this->postJson('/api/tasks', ['title' => 'Sem prioridade'])
+            ->assertCreated()
+            ->assertJsonFragment([
+                'title' => 'Sem prioridade',
+                'priority' => 'medium',
+            ]);
+
+        $this->assertDatabaseHas('tasks', [
+            'title' => 'Sem prioridade',
+            'priority' => 'medium',
+            'user_id' => $this->user->id,
+        ]);
+    }
+
+    public function test_it_rejects_invalid_priority(): void
+    {
+        $this->postJson('/api/tasks', [
+            'title' => 'Prioridade inválida',
+            'priority' => 'urgent',
+        ])->assertUnprocessable();
+    }
+
+    public function test_it_updates_task_priority(): void
+    {
+        $task = Task::factory()->create([
+            'title' => 'Ajustar prioridade',
+            'priority' => 'medium',
+            'user_id' => $this->user->id,
+        ]);
+
+        $this->patchJson("/api/tasks/{$task->id}/priority", ['priority' => 'low'])
+            ->assertOk()
+            ->assertJsonFragment([
+                'title' => 'Ajustar prioridade',
+                'priority' => 'low',
+            ]);
+
+        $this->assertDatabaseHas('tasks', [
+            'id' => $task->id,
+            'priority' => 'low',
+        ]);
+    }
+
+    public function test_it_rejects_invalid_priority_on_update(): void
+    {
+        $task = Task::factory()->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        $this->patchJson("/api/tasks/{$task->id}/priority", ['priority' => 'urgent'])
+            ->assertUnprocessable();
+    }
+
+    public function test_it_creates_a_task_with_due_date(): void
+    {
+        $this->postJson('/api/tasks', [
+            'title' => 'Com prazo',
+            'due_date' => '2026-09-10',
+        ])
+            ->assertCreated()
+            ->assertJsonFragment([
+                'title' => 'Com prazo',
+                'due_date' => '2026-09-10',
+            ]);
+
+        $this->assertDatabaseHas('tasks', [
+            'title' => 'Com prazo',
+            'due_date' => '2026-09-10',
+            'user_id' => $this->user->id,
+        ]);
+    }
+
+    public function test_it_rejects_invalid_due_date(): void
+    {
+        $this->postJson('/api/tasks', [
+            'title' => 'Data inválida',
+            'due_date' => '10-09-2026',
+        ])->assertUnprocessable();
+    }
+
+    public function test_it_lists_due_tomorrow_reminders_only_for_owner(): void
+    {
+        $tomorrow = now()->addDay()->toDateString();
+        $other = User::factory()->create();
+
+        Task::factory()->create([
+            'title' => 'Meu lembrete',
+            'due_date' => $tomorrow,
+            'user_id' => $this->user->id,
+        ]);
+        Task::factory()->create([
+            'title' => 'De outro usuário',
+            'due_date' => $tomorrow,
+            'user_id' => $other->id,
+        ]);
+        Task::factory()->create([
+            'title' => 'Concluída',
+            'done' => true,
+            'due_date' => $tomorrow,
+            'user_id' => $this->user->id,
+        ]);
+
+        $this->getJson('/api/reminders/due-tomorrow')
+            ->assertOk()
+            ->assertJsonFragment(['title' => 'Meu lembrete'])
+            ->assertJsonMissing(['title' => 'De outro usuário'])
+            ->assertJsonMissing(['title' => 'Concluída']);
+    }
+
     public function test_it_archives_a_task_and_omits_it_from_the_active_list(): void
     {
-        $task = Task::factory()->create(['title' => 'Arquivar esta']);
-        Task::factory()->create(['title' => 'Continua ativa']);
+        $task = Task::factory()->create([
+            'title' => 'Arquivar esta',
+            'user_id' => $this->user->id,
+        ]);
+        Task::factory()->create([
+            'title' => 'Continua ativa',
+            'user_id' => $this->user->id,
+        ]);
 
         $this->patchJson("/api/tasks/{$task->id}/archive")
             ->assertOk()

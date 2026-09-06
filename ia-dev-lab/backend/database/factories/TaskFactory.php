@@ -18,6 +18,9 @@ class TaskFactory extends Factory
             'title' => fake()->sentence(3),
             'done' => false,
             'archived' => false,
+            'due_date' => null,
+            'priority' => 'medium',
+            'user_id' => null,
         ];
     }
 }

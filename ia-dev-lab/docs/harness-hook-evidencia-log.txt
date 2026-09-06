@@ -1,0 +1,20 @@
+date: 2026-09-06T15:41:47.832Z
+hook: .cursor/hooks/block-db-destruction.mjs
+runner: .cursor/hooks/test-block-db-destruction.mjs
+
+deny-artisan-fresh: expect=deny got=deny ok=true
+  stderr: block-db-destruction: DENY -> php artisan migrate:fresh
+deny-db-wipe: expect=deny got=deny ok=true
+  stderr: block-db-destruction: DENY -> php artisan db:wipe --force
+deny-schema-drop: expect=deny got=deny ok=true
+  stderr: block-db-destruction: DENY -> php artisan schema:drop
+deny-remove-sqlite: expect=deny got=deny ok=true
+  stderr: block-db-destruction: DENY -> Remove-Item ia-dev-lab/backend/database/database.sqlite
+deny-delete-tool: expect=deny got=deny ok=true
+  stderr: block-db-destruction: DENY -> ia-dev-lab/backend/database/database.sqlite Delete
+allow-migrate: expect=allow got=allow ok=true
+allow-test: expect=allow got=allow ok=true
+deny-with-bom: expect=deny got=deny ok=true
+  stderr: block-db-destruction: DENY -> php artisan migrate:fresh --seed
+
+ALL_CASES_PASSED

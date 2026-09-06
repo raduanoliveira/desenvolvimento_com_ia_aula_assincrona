@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\Task;
+use App\Domain\Task;
+use App\Domain\TaskNotFoundException;
 use App\Repositories\Contracts\TaskRepositoryInterface;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ArchiveTaskService
 {
@@ -12,12 +12,12 @@ class ArchiveTaskService
     {
     }
 
-    public function handle(int $id): Task
+    public function handle(int $id, int $ownerId): Task
     {
-        $task = $this->tasks->find($id);
+        $task = $this->tasks->findForUser($id, $ownerId);
 
         if ($task === null) {
-            throw (new ModelNotFoundException())->setModel(Task::class, [$id]);
+            throw new TaskNotFoundException($id);
         }
 
         return $this->tasks->update($task, [

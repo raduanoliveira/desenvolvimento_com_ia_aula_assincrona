@@ -2,3 +2,5 @@ vendor
 .env
 .phpunit.result.cache
 database/database.sqlite
+*.log
+.git
