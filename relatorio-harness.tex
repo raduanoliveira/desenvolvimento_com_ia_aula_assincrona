@@ -29,7 +29,7 @@ Geomerez Raduan de Oliveira Bandeira
 
 Repositório: \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona}
 
-Esta página cobre a \textbf{Etapa 1 (parte autonomia)} da prática de Harness e Arquitetura. O detalhe está em \path{ia-dev-lab/docs/harness-comparacao-auto-plan.md}.
+Esta página cobre a \textbf{Etapa 1} da prática de Harness e Arquitetura (autonomia + hook). Detalhe em \path{ia-dev-lab/docs/harness-comparacao-auto-plan.md} e \path{ia-dev-lab/docs/harness-hook-evidencia.md}.
 
 \textbf{1. Projeto e tarefa.} Continuei no \texttt{ia-dev-lab} (Laravel + React + Docker). A tarefa pequena foi a mesma nas duas corridas: prazo opcional \texttt{due\_date} nas tarefas e lembrete só no sistema (toaster MUI) ao entrar no dashboard, para itens ativos com prazo amanhã. Segui o \texttt{AGENTS.md}: Service por caso de uso, controller só HTTP, testes no Docker. Os ADRs 0001 a 0004 não foram alterados.
 
@@ -49,14 +49,14 @@ Testes & 54 backend / 25 frontend & 54 backend / 26 frontend & Plan \\
 \end{tabular}
 }
 
-\textbf{3. Conclusão dessa comparação.} Os dois modos entregaram a feature equivalente e respeitaram as camadas. Eu fico com a branch \texttt{feature/prazo-plan}: o tempo a mais vale o controle e o risco menor. A Auto permanece no Git como evidência. Commits: \texttt{a2f8eec} (Plan) e \texttt{8a8ce8c} (Auto). Migration \texttt{due\_date} aplicada no ambiente Docker do lab.
+\textbf{3. Conclusão da comparação.} Os dois modos entregaram a feature equivalente. Eu fico com \texttt{feature/prazo-plan}: o tempo a mais vale o controle e o risco menor. A Auto permanece no Git como evidência.
 
-\textbf{4. Pendência da Etapa 1.} Ainda falta o hook (ou controle equivalente) que bloqueie de fato uma ação de risco do projeto, diferente do exemplo de merge na \texttt{main}, com print ou log do bloqueio. Isso é o próximo passo desta etapa.
+\textbf{4. Hook (guardrail).} Criei um hook de projeto em \path{.cursor/hooks.json} que chama \path{.cursor/hooks/block-db-destruction.mjs} nos eventos \texttt{beforeShellExecution} e \texttt{preToolUse}. Ele bloqueia destruição do banco (\texttt{migrate:fresh}, \texttt{db:wipe}, \texttt{schema:drop}, apagar \texttt{database.sqlite}), risco diferente do exemplo de merge na \texttt{main}. Testei com fixtures locais (8/8) e disparei de propósito um comando com \texttt{migrate:fresh} no agente: o Cursor recusou com a mensagem do harness. Log em \path{ia-dev-lab/docs/harness-hook-evidencia-log.txt}.
 
 \vspace{0.1em}
 \hrule
 \vspace{0.3em}
 
-\textbf{Onde está o restante.} Comparativo: \path{ia-dev-lab/docs/harness-comparacao-auto-plan.md}. Execuções: \path{ia-dev-lab/docs/harness-execucao-auto.md} e \path{ia-dev-lab/docs/harness-execucao-plan.md}.
+\textbf{Onde está o restante.} Comparativo: \path{ia-dev-lab/docs/harness-comparacao-auto-plan.md}. Hook: \path{ia-dev-lab/docs/harness-hook-evidencia.md}. Execuções: \path{ia-dev-lab/docs/harness-execucao-auto.md} e \path{ia-dev-lab/docs/harness-execucao-plan.md}.
 
 \end{document}

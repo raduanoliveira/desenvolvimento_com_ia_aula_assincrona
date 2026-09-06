@@ -37,6 +37,7 @@ Registros detalhados:
 
 Fico com **`feature/prazo-plan`** como branch vencedora para seguir o harness (merge futuro / base das próximas etapas). Motivo: controle e risco melhores sem perda de qualidade. A `feature/prazo-auto` permanece no repositório como evidência da comparação.
 
-## Pendência da Etapa 1 (enunciado)
+## Pendência resolvida: hook
 
-Ainda falta o **hook** que bloqueia uma ação de risco do projeto (diferente de “bloquear merge na main”), com evidência de bloqueio. Isso não entra neste comparativo de autonomia.
+Hook commitado em `.cursor/hooks.json` + `.cursor/hooks/block-db-destruction.mjs`.
+Evidência: `docs/harness-hook-evidencia.md` (suite local + bloqueio real no Cursor).
