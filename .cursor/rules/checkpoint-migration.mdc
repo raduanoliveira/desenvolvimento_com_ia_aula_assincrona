@@ -1,0 +1,12 @@
+---
+description: Checkpoint humano obrigatório antes de criar ou aplicar migration
+alwaysApply: true
+---
+
+# Checkpoint: migration
+
+Antes de criar arquivo em `ia-dev-lab/backend/database/migrations/` ou de rodar `php artisan migrate` (incluindo `docker compose exec backend php artisan migrate`), pare e espere decisão humana: aprovar, editar ou rejeitar.
+
+Não aplique schema no SQLite do laboratório sem essa parada.
+
+Este checkpoint não é o hook que bloqueia `migrate:fresh`, `db:wipe` ou apagar `database.sqlite`.

@@ -19,6 +19,7 @@ Rode na pasta do laboratório.
 ## Convenções de código
 
 - TDD: teste primeiro, depois o código
+- Checkpoint humano: antes de criar ou aplicar migration, parar e esperar aprovar, editar ou rejeitar. Não rodar `php artisan migrate` sem essa decisão. O hook que bloqueia destruição do banco não substitui este checkpoint.
 - Regra de negócio na camada de aplicação (Service), não no controller e não na tela
 - Validação na entrada da API, fora do controller
 - Persistência atrás de abstração (Repository), não acoplada à regra de negócio
@@ -56,5 +57,6 @@ Rode na pasta do laboratório.
 - Não pular testes nem misturar os tipos
 - Não entregar layout datado ou tela só com campo e lista
 - Não instalar PHP, Node ou banco na máquina host
+- Não aplicar migration sem parar no checkpoint humano (aprovar, editar ou rejeitar)
 - Não misturar backend e frontend na mesma pasta
 - Não versionar segredos nem pastas de dependência

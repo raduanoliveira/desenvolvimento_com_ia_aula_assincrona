@@ -1,75 +1,63 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[12pt,a4paper]{article}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[brazil]{babel}
-\usepackage{lmodern}
-\usepackage[a4paper,margin=2.0cm]{geometry}
+\usepackage{mathptmx}
+\usepackage[a4paper,left=3cm,right=2cm,top=2.5cm,bottom=2cm]{geometry}
 \usepackage{setspace}
+\usepackage{indentfirst}
+\usepackage{microtype}
 \usepackage{hyperref}
 \usepackage{xurl}
-\usepackage{booktabs}
-\usepackage{array}
-\usepackage{tabularx}
-\usepackage{ragged2e}
+\usepackage{needspace}
 
 \pagestyle{empty}
-\setstretch{0.97}
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{0.2em}
+\setstretch{1.12}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0.22em}
+\flushbottom
 \emergencystretch=3em
 \Urlmuskip=0mu plus 3mu
+\hypersetup{colorlinks=false,hidelinks}
+\frenchspacing
 
 \makeatletter
 \g@addto@macro{\UrlBreaks}{\do\/\do\-\do\_\do\.\do\:}
 \makeatother
 
 \begin{document}
+\sloppy
 
 \begin{center}
 {\bfseries Atividade Prática Assíncrona}\\
 Geomerez Raduan de Oliveira Bandeira
 \end{center}
 
-\vspace{0.06em}
+\vspace{0.15em}
 \hrule
-\vspace{0.24em}
+\vspace{0.4em}
 
-Repositório: \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona}
+\noindent Repositório: \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona}
 
-Este relatório apresenta os resultados da Etapa~1 da prática assíncrona de Harness e Arquitetura. A etapa compreende a comparação entre dois modos de autonomia do agente e a criação de um hook de proteção sobre uma ação de risco do próprio projeto. O registro detalhado da comparação está em \path{ia-dev-lab/docs/harness-comparacao-auto-plan.md}. A evidência do hook está em \path{ia-dev-lab/docs/harness-hook-evidencia.md}.
+Este relatório apresenta os resultados das Etapas 1, 2 e 3 da prática assíncrona de harness e arquitetura, realizadas no laboratório \texttt{ia-dev-lab}. A Etapa 1 compara dois modos de autonomia do agente e descreve um hook de proteção. A Etapa 2 compara implementação com TDD e sem TDD e registra o uso do plugin Superpowers em uma feature nova. A Etapa 3 guarda o transcript da sessão e define um checkpoint humano obrigatório. Tudo isso sob o \texttt{AGENTS.md} e com testes no Docker.
 
-\textbf{1. Projeto e tarefa escolhida.} Mantive o laboratório \texttt{ia-dev-lab}, já utilizado nas práticas anteriores, com API em Laravel, interface em React com TypeScript e Material UI, e execução pelo Docker. A tarefa pequena, repetida nas duas execuções, foi acrescentar prazo opcional às tarefas (\texttt{due\_date}, apenas data) e um lembrete interno ao sistema: ao entrar no painel autenticado, o usuário deve ser avisado, por toaster, sobre tarefas ativas, não arquivadas e não concluídas cujo prazo é o dia seguinte. A implementação deveria respeitar o \path{AGENTS.md}: um Service por caso de uso, controller restrito ao HTTP, persistência por repositório e testes no Docker.
+\textbf{1 INTRODUÇÃO AO PROJETO E À TAREFA.} Mantive o monorepo com API Laravel, interface em React com TypeScript, Context API e Material UI, e execução exclusiva no Docker. O \texttt{AGENTS.md} determina Service por caso de uso, controller restrito ao HTTP, persistência por repositório, tipos de teste separados e vedação a pular camada. Essas regras valem para o agente em qualquer modo de autonomia. A tarefa da Etapa 1, repetida nos dois modos com o mesmo prompt e o mesmo modelo (Composer), foi acrescentar prazo opcional (\texttt{due\_date}, apenas data) e um toaster, ao entrar no painel autenticado, para tarefas ativas, não arquivadas e não concluídas cujo prazo é o dia seguinte. O recorte é pequeno de propósito: o que se compara não é o tamanho da feature, e sim o comportamento do harness.
 
-\textbf{2. Comparação entre modos de autonomia.} Executei a mesma tarefa duas vezes, com o mesmo prompt e o mesmo modelo (Composer), em branches distintas. No modo Auto (\path{feature/prazo-auto}), o agente avançou com aceite contínuo de edições. Registrei o prompt, o modelo, o tempo aproximado, a sensação de controle e o risco percebido em \path{ia-dev-lab/docs/harness-execucao-auto.md}. No modo Plan (\path{feature/prazo-plan}), primeiro construí e revisei um plano escrito; só depois autorizei a implementação. O registro correspondente está em \path{ia-dev-lab/docs/harness-execucao-plan.md}. A tabela abaixo resume a comparação pedida no enunciado. A versão ampliada, com observações qualitativas, está no comparativo citado no início.
+\textbf{2 COMPARAÇÃO ENTRE OS MODOS AUTO E PLAN.} No modo Auto (\texttt{feature/prazo-auto}), o agente avançou com aceite contínuo de edições e concluiu em cerca de trinta minutos, de ponta a ponta, com retrabalho posterior em testes: o risco percebido foi médio. No modo Plan (\texttt{feature/prazo-plan}), revisei o plano escrito e só então autorizei a implementação, em cerca de quarenta minutos após o aceite; o escopo já estava fechado e o risco percebido foi baixo. Em testes, o Auto encerrou com 54 no backend e 25 no frontend; o Plan, com 54 no backend e 26 no frontend. Prefiro o Auto só no tempo, porque concluiu a mesma tarefa sem etapa prévia de planejamento. Prefiro o Plan no risco e nos testes: a cobertura é equivalente, com um caso a mais no frontend, e não precisei corrigir falhas depois. As duas execuções produziram o mesmo comportamento funcional e respeitaram o \texttt{AGENTS.md}. Segui com a branch Plan, por maior controle. A branch Auto permanece no repositório como evidência.
 
-{\footnotesize
-\setlength{\tabcolsep}{3.5pt}
-\begin{tabularx}{\linewidth}{@{}
-  >{\RaggedRight\arraybackslash}p{1.8cm}
-  >{\RaggedRight\arraybackslash}X
-  >{\RaggedRight\arraybackslash}X
-  >{\Centering\arraybackslash}p{1.2cm}
-  >{\RaggedRight\arraybackslash}X
-  @{}}
-\toprule
-Dimensão & Auto & Plan & Pref. & Razão da preferência \\
-\midrule
-Tempo & cerca de 30~minutos, de ponta a ponta & cerca de 40~minutos após o aceite do plano & Auto & O Auto concluiu a mesma tarefa em menos tempo, sem etapa prévia de planejamento. \\
-Risco & médio; houve retrabalho em testes & baixo & Plan & No Auto precisei corrigir falhas depois; no Plan o escopo já estava fechado. \\
-Testes & 54 no backend e 25 no frontend & 54 no backend e 26 no frontend & Plan & Cobertura equivalente, com um caso a mais no frontend na execução Plan. \\
-\bottomrule
-\end{tabularx}
-}
+\textbf{3 HOOK DE PROTEÇÃO.} Configurei o hook em \texttt{.cursor/hooks.json} e \texttt{.cursor/hooks/block-db-destruction.mjs}, nos eventos \texttt{beforeShellExecution} e \texttt{preToolUse}. O risco escolhido foi destruir o banco do laboratório: \texttt{migrate:fresh}, \texttt{migrate:refresh}, \texttt{migrate:reset}, \texttt{db:wipe}, \texttt{schema:drop} ou remoção de \texttt{database.sqlite}. Comandos seguros, como \texttt{migrate} e a bateria de testes, permanecem liberados. A validação teve oito casos locais aprovados e uma tentativa, no agente, de rodar comando com \texttt{migrate:fresh}. O Cursor recusou a ação e exibiu a mensagem do harness.
 
-\textbf{3. Decisão após a comparação.} As duas execuções produziram comportamento funcional equivalente e respeitaram as camadas previstas no \path{AGENTS.md}. Optei por seguir com a branch \path{feature/prazo-plan}. Embora o modo Auto tenha sido mais rápido, o modo Plan ofereceu maior controle humano e menor risco percebido, o que me parece mais adequado a um harness mínimo. A branch Auto permanece no repositório como evidência da comparação.
+\Needspace{6\baselineskip}
+\textbf{4 IMPLEMENTAÇÃO COM TDD E SEM TDD.} Na branch \texttt{feature/tdd-guardrail}, a tarefa A filtrou a lista por \texttt{all}, \texttt{pending} ou \texttt{done}. A ordem foi teste, falha observada e código mínimo: os testes vieram antes (Service, API com 422 para status inválido, gateway e componente). O commit \texttt{49ca1d1} é o Red; o \texttt{48a55fe}, o Green. A regra ficou no Service. Passaram 58 testes no backend e 28 no frontend. A aderência ao \texttt{AGENTS.md} foi alta, com TDD explícito, e o risco residual ficou baixo no escopo do filtro. A tarefa B, sem teste prévio, editou o título no caminho feliz: as camadas existiam, mas não houve Red nem testes novos da feature. A suíte antiga continuou verde sem cobrir o rename, o dono da tarefa nem o título vazio na rota. A aderência ao \texttt{AGENTS.md} foi parcial --- camadas corretas e TDD ignorado --- e o risco residual ficou médio, porque uma regressão do rename pode passar.
 
-\textbf{4. Hook de proteção.} Além da comparação de autonomia, configurei um hook de projeto em \path{.cursor/hooks.json}, associado ao script \path{.cursor/hooks/block-db-destruction.mjs}, nos eventos \path{beforeShellExecution} e \path{preToolUse}. O risco escolhido foi a destruição do banco do laboratório, por exemplo por meio de \texttt{migrate:fresh}, \texttt{db:wipe}, \texttt{schema:drop} ou remoção do arquivo \path{database.sqlite}. Validei o hook de duas maneiras: uma bateria local com oito casos, todos aprovados, e uma tentativa deliberada, no próprio agente, de executar um comando contendo \texttt{migrate:fresh}. O Cursor recusou a ação e exibiu a mensagem definida pelo harness. O log dessa validação está em \path{ia-dev-lab/docs/harness-hook-evidencia-log.txt}.
+\Needspace{5\baselineskip}
+\textbf{5 SUPERPOWERS.} Usei o plugin Superpowers de ponta a ponta na prioridade da tarefa (\texttt{high}, \texttt{medium} ou \texttt{low}): criar, editar e mostrar na lista. O recorte foi uma mudança delimitada no ToDo já existente. O agente apresentou o desenho --- coluna no banco, Service de criação, Service novo de atualização, \texttt{PATCH /api/tasks/\{id\}/priority} e seletor na tela --- e só implementou depois da minha aprovação. Em seguida escreveu o teste que falhou e o código mínimo até a suíte voltar a verde. A evidência está na branch \texttt{feature/task-priority}, commit \texttt{0b75d75}. No Docker, passaram 67 testes no backend e 32 no frontend. O Superpowers não substituiu o \texttt{AGENTS.md}: reforçou a ordem, com checkpoint humano no desenho, Red antes do Green e verificação antes de declarar pronto.
 
-\vspace{0.06em}
-\hrule
-\vspace{0.18em}
+\Needspace{6\baselineskip}
+\textbf{6 OBSERVABILIDADE E CHECKPOINT HUMANO.} Exportei o log da sessão do agente, ao longo desta prática, para \texttt{ia-dev-lab/docs/sessao-log.md}. O arquivo reúne as falas das sessões do Cursor sem reescrever o diálogo; as chamadas de ferramenta ficaram de fora só para o texto caber no repositório. O checkpoint humano obrigatório deste ToDo é parar \emph{antes de criar ou aplicar uma migration}: arquivo novo em \texttt{database/migrations/} ou \texttt{php artisan migrate}, inclusive via Docker. Isso não se confunde com o hook da Etapa 1: o hook recusa destruir o banco (\texttt{migrate:fresh}, \texttt{db:wipe} e afins); o checkpoint decide se o schema pode mudar. A regra entrou no \texttt{AGENTS.md} e na rule \texttt{checkpoint-migration.mdc}. A simulação ocorreu em 6 de setembro de 2026, no modo Plan da branch \texttt{feature/prazo-plan}: o agente apresentou o plano da feature de prazo com migration nova e não aplicou o schema enquanto eu não aceitei. A migration em jogo foi \texttt{2026\_09\_06\_120000\_add\_due\_date\_to\_tasks\_table} (coluna opcional \texttt{due\_date}). A decisão foi \textbf{aprovar}: autorizei o plano, não editei o recorte da coluna e não rejeitei. Só então a implementação e o \texttt{migrate} seguiram. Assumi o papel de responsável pelo schema e pelos dados do laboratório, não só de revisor de código: o SQLite do Docker é o estado real das tarefas, e o hook não pergunta se a coluna nova é desejável. Houve uma segunda parada do mesmo tipo na prioridade (\texttt{2026\_09\_06\_141500\_add\_priority\_to\_tasks\_table}), de novo com aprovação do desenho antes do código. O registro completo está em \texttt{ia-dev-lab/docs/harness-checkpoint.md}.
 
-\textbf{Documentação complementar.} Comparativo completo: \path{ia-dev-lab/docs/harness-comparacao-auto-plan.md}. Evidência do hook: \path{ia-dev-lab/docs/harness-hook-evidencia.md}. Execuções Auto e Plan: \path{ia-dev-lab/docs/harness-execucao-auto.md} e \path{ia-dev-lab/docs/harness-execucao-plan.md}.
+\Needspace{4\baselineskip}
+\textbf{7 CONSIDERAÇÕES FINAIS.} Na Etapa 1, o modo Plan tornou-se a base do harness e o hook passou a recusar a destruição do banco. Na Etapa 2, o TDD deixou trilha auditável no filtro, enquanto a edição sem teste mostrou falsa segurança da suíte prévia. O Superpowers, na prioridade, repetiu o ciclo da tarefa A, com aprovação humana antes do código. Na Etapa 3, o transcript ficou no repositório e o checkpoint passou a exigir aceite humano antes de migration: o hook impede o wipe; o checkpoint decide se o modelo de dados muda. As três features permanecem no mesmo laboratório, com as mesmas camadas e a mesma bateria executada no Docker. O controle do harness, nestas etapas, não esteve em gerar mais código, e sim em decidir o modo de autonomia, recusar ação destrutiva, exigir teste vermelho quando a regra pedia TDD, recusar implementação antes do desenho aprovado e parar antes de alterar o schema.
 
 \end{document}
