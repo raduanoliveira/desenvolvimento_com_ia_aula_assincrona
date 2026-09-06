@@ -17,6 +17,7 @@ describe("TaskForm", () => {
       loadTasks: vi.fn(),
       setStatusFilter: vi.fn(),
       addTask,
+      renameTask: vi.fn(),
       completeTask: vi.fn(),
       archiveTask: vi.fn(),
       removeTask: vi.fn(),

@@ -14,6 +14,7 @@ import {
   listDueTomorrowReminders,
   listTasks,
   toggleTask,
+  updateTaskTitle,
   type CreateTaskInput,
   type TaskStatusFilterValue,
 } from "./taskApi";
@@ -27,6 +28,7 @@ type TaskContextValue = {
   loadTasks: () => Promise<void>;
   setStatusFilter: (status: TaskStatusFilterValue) => void;
   addTask: (input: CreateTaskInput) => Promise<void>;
+  renameTask: (id: number, title: string) => Promise<void>;
   completeTask: (id: number) => Promise<void>;
   archiveTask: (id: number) => Promise<void>;
   removeTask: (id: number) => Promise<void>;
@@ -64,6 +66,11 @@ export function TaskProvider({ children }: { children: ReactNode }) {
     setTasks((current) => [created, ...current]);
   }, []);
 
+  const renameTask = useCallback(async (id: number, title: string) => {
+    const updated = await updateTaskTitle(id, title);
+    setTasks((current) => current.map((task) => (task.id === id ? updated : task)));
+  }, []);
+
   const completeTask = useCallback(async (id: number) => {
     const updated = await toggleTask(id);
     setTasks((current) => current.map((task) => (task.id === id ? updated : task)));
@@ -96,6 +103,7 @@ export function TaskProvider({ children }: { children: ReactNode }) {
       loadTasks,
       setStatusFilter,
       addTask,
+      renameTask,
       completeTask,
       archiveTask,
       removeTask,
@@ -109,6 +117,7 @@ export function TaskProvider({ children }: { children: ReactNode }) {
       loadTasks,
       setStatusFilter,
       addTask,
+      renameTask,
       completeTask,
       archiveTask,
       removeTask,

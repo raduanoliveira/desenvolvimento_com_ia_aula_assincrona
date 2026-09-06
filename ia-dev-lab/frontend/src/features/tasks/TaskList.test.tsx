@@ -19,6 +19,7 @@ describe("TaskList", () => {
       loadTasks: vi.fn(),
       setStatusFilter: vi.fn(),
       addTask: vi.fn(),
+      renameTask: vi.fn(),
       completeTask,
       archiveTask,
       removeTask,

@@ -57,6 +57,20 @@ export async function listDueTomorrowReminders(): Promise<Task[]> {
   return payload.data ?? payload;
 }
 
+export async function updateTaskTitle(id: number, title: string): Promise<Task> {
+  const response = await fetch(`${apiUrl}/tasks/${id}`, {
+    method: "PATCH",
+    credentials: "include",
+    headers: { "Content-Type": "application/json", ...jsonHeaders },
+    body: JSON.stringify({ title }),
+  });
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+  const payload = await response.json();
+  return payload.data ?? payload;
+}
+
 export async function toggleTask(id: number): Promise<Task> {
   const response = await fetch(`${apiUrl}/tasks/${id}/toggle`, {
     method: "PATCH",

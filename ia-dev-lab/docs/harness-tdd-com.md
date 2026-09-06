@@ -24,7 +24,7 @@ Feature: filtrar a lista ativa por `all`, `pending` ou `done` (`GET /api/tasks?s
   - Controller magro passando o status validado
   - `listTasks(status)`, `TaskStatusFilter`, Context e dashboard
 - Testes: 58 backend e 28 frontend, todos passando no Docker.
-- Commit: *Green: implementa filtro de tarefas por status...*
+- Commit: `48a55fe` — *Green: implementa filtro de tarefas por status...*
 
 ### Refactor
 
