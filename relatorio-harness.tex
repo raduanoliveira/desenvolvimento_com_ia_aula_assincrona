@@ -1,0 +1,62 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage{booktabs}
+\usepackage{array}
+
+\pagestyle{empty}
+\singlespacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.3em}
+
+\begin{document}
+
+\begin{center}
+{\bfseries Atividade Prática Assíncrona}\\
+Geomerez Raduan de Oliveira Bandeira
+\end{center}
+
+\vspace{0.1em}
+\hrule
+\vspace{0.35em}
+
+Repositório: \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona}
+
+Esta página cobre a \textbf{Etapa 1 (parte autonomia)} da prática de Harness e Arquitetura. O detalhe está em \path{ia-dev-lab/docs/harness-comparacao-auto-plan.md}.
+
+\textbf{1. Projeto e tarefa.} Continuei no \texttt{ia-dev-lab} (Laravel + React + Docker). A tarefa pequena foi a mesma nas duas corridas: prazo opcional \texttt{due\_date} nas tarefas e lembrete só no sistema (toaster MUI) ao entrar no dashboard, para itens ativos com prazo amanhã. Segui o \texttt{AGENTS.md}: Service por caso de uso, controller só HTTP, testes no Docker. Os ADRs 0001 a 0004 não foram alterados.
+
+\textbf{2. Dois modos de autonomia.} No modo \textbf{Auto} (\texttt{feature/prazo-auto}) o agente implementou com aceite contínuo; registrei prompt, modelo (Composer) e métricas em \path{ia-dev-lab/docs/harness-execucao-auto.md}. No modo \textbf{Plan} (\texttt{feature/prazo-plan}) montei o plano, revisei e só então autorizei a edição; o registro está em \path{ia-dev-lab/docs/harness-execucao-plan.md}. O prompt foi idêntico nas duas.
+
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{3.8cm}>{\raggedright\arraybackslash}p{3.8cm}>{\centering\arraybackslash}p{1.6cm}@{}}
+\toprule
+Dimensão & Auto & Plan & Pref. \\
+\midrule
+Tempo & $\sim$30 min ponta a ponta & $\sim$40 min após ok do plano & Auto \\
+Controle & média & alta & Plan \\
+Risco & médio (retrabalho em testes) & baixo & Plan \\
+Testes & 54 backend / 25 frontend & 54 backend / 26 frontend & Plan \\
+\bottomrule
+\end{tabular}
+}
+
+\textbf{3. Conclusão dessa comparação.} Os dois modos entregaram a feature equivalente e respeitaram as camadas. Eu fico com a branch \texttt{feature/prazo-plan}: o tempo a mais vale o controle e o risco menor. A Auto permanece no Git como evidência. Commits: \texttt{a2f8eec} (Plan) e \texttt{8a8ce8c} (Auto). Migration \texttt{due\_date} aplicada no ambiente Docker do lab.
+
+\textbf{4. Pendência da Etapa 1.} Ainda falta o hook (ou controle equivalente) que bloqueie de fato uma ação de risco do projeto, diferente do exemplo de merge na \texttt{main}, com print ou log do bloqueio. Isso é o próximo passo desta etapa.
+
+\vspace{0.1em}
+\hrule
+\vspace{0.3em}
+
+\textbf{Onde está o restante.} Comparativo: \path{ia-dev-lab/docs/harness-comparacao-auto-plan.md}. Execuções: \path{ia-dev-lab/docs/harness-execucao-auto.md} e \path{ia-dev-lab/docs/harness-execucao-plan.md}.
+
+\end{document}

@@ -58,4 +58,4 @@ Mesmo comportamento do prompt; testes passando no Docker; este arquivo com promp
 - Tempo gasto (aproximado): ~40 min de implementação após o ok do plano (branch + TDD backend/frontend + testes Docker), além do tempo prévio de montar e revisar o plano.
 - Sensação de controle (alta / média / baixa): alta (plano revisado antes de editar; ordem TDD explícita; escopo fechado).
 - Risco percebido (alto / médio / baixo): baixo (mesma feature do Auto, testes 54 backend / 26 frontend passando no Docker antes de qualquer commit).
-- Observações: branch feature/prazo-plan limpa a partir de feature/setup-inicial; Auto permanece no stash wip-prazo-auto em feature/prazo-auto. Sem commit nesta execução. Migration local do lab ainda depende de autorização explícita (`php artisan migrate`). ADRs 0001–0004 intactos.
+- Observações: branch feature/prazo-plan limpa a partir de feature/setup-inicial; Auto commitada em feature/prazo-auto (8a8ce8c). Plan commitada (a2f8eec). Migration due_date presente no lab Docker. Branch vencedora: feature/prazo-plan (ver docs/harness-comparacao-auto-plan.md). ADRs 0001–0004 intactos.
