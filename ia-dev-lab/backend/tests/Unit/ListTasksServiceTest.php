@@ -28,4 +28,40 @@ class ListTasksServiceTest extends TestCase
         $this->assertSame('Continua ativa', $result->first()->title);
         $this->assertFalse($result->contains(fn (Task $task) => $task->title === 'Já arquivada'));
     }
+
+    public function test_it_filters_only_pending_tasks_when_status_is_pending(): void
+    {
+        $repository = Mockery::mock(TaskRepositoryInterface::class);
+        $pending = new Task(['title' => 'Pendente', 'done' => false, 'archived' => false]);
+        $done = new Task(['title' => 'Concluída', 'done' => true, 'archived' => false]);
+
+        $repository->shouldReceive('allForUser')
+            ->once()
+            ->with(7)
+            ->andReturn(collect([$pending, $done]));
+
+        $service = new ListTasksService($repository);
+        $result = $service->handle(7, 'pending');
+
+        $this->assertCount(1, $result);
+        $this->assertSame('Pendente', $result->first()->title);
+    }
+
+    public function test_it_filters_only_done_tasks_when_status_is_done(): void
+    {
+        $repository = Mockery::mock(TaskRepositoryInterface::class);
+        $pending = new Task(['title' => 'Pendente', 'done' => false, 'archived' => false]);
+        $done = new Task(['title' => 'Concluída', 'done' => true, 'archived' => false]);
+
+        $repository->shouldReceive('allForUser')
+            ->once()
+            ->with(7)
+            ->andReturn(collect([$pending, $done]));
+
+        $service = new ListTasksService($repository);
+        $result = $service->handle(7, 'done');
+
+        $this->assertCount(1, $result);
+        $this->assertSame('Concluída', $result->first()->title);
+    }
 }

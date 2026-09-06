@@ -61,6 +61,21 @@ describe("taskApi", () => {
     );
   });
 
+  it("envia GET com status pending ao filtrar tarefas", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ data: [] }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await listTasks("pending");
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringMatching(/\/tasks\?status=pending$/),
+      expect.objectContaining({ credentials: "include" })
+    );
+  });
+
   it("envia GET para lembretes de amanhã com credentials include", async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,

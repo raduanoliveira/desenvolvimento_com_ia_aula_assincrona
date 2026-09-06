@@ -34,6 +34,36 @@ class TaskApiTest extends TestCase
             ->assertJsonMissingPath('data.0.user_id');
     }
 
+    public function test_it_lists_tasks_filtered_by_status(): void
+    {
+        Task::factory()->create([
+            'title' => 'Ainda pendente',
+            'done' => false,
+            'user_id' => $this->user->id,
+        ]);
+        Task::factory()->create([
+            'title' => 'Já concluída',
+            'done' => true,
+            'user_id' => $this->user->id,
+        ]);
+
+        $this->getJson('/api/tasks?status=pending')
+            ->assertOk()
+            ->assertJsonFragment(['title' => 'Ainda pendente'])
+            ->assertJsonMissing(['title' => 'Já concluída']);
+
+        $this->getJson('/api/tasks?status=done')
+            ->assertOk()
+            ->assertJsonFragment(['title' => 'Já concluída'])
+            ->assertJsonMissing(['title' => 'Ainda pendente']);
+    }
+
+    public function test_it_rejects_invalid_status_filter(): void
+    {
+        $this->getJson('/api/tasks?status=arquivadas')
+            ->assertUnprocessable();
+    }
+
     public function test_it_creates_a_task(): void
     {
         $this->postJson('/api/tasks', ['title' => 'Comprar pão'])
