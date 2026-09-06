@@ -15,6 +15,7 @@ class TaskResource extends JsonResource
             'done' => $this->done,
             'archived' => $this->archived,
             'due_date' => $this->due_date?->format('Y-m-d'),
+            'priority' => $this->priority,
             'created_at' => $this->created_at,
         ];
     }

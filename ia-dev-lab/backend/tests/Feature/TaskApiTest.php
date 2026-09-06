@@ -106,6 +106,80 @@ class TaskApiTest extends TestCase
         $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
     }
 
+    public function test_it_creates_a_task_with_high_priority(): void
+    {
+        $this->postJson('/api/tasks', [
+            'title' => 'Entrega urgente',
+            'priority' => 'high',
+        ])
+            ->assertCreated()
+            ->assertJsonFragment([
+                'title' => 'Entrega urgente',
+                'priority' => 'high',
+            ]);
+
+        $this->assertDatabaseHas('tasks', [
+            'title' => 'Entrega urgente',
+            'priority' => 'high',
+            'user_id' => $this->user->id,
+        ]);
+    }
+
+    public function test_it_defaults_created_task_priority_to_medium(): void
+    {
+        $this->postJson('/api/tasks', ['title' => 'Sem prioridade'])
+            ->assertCreated()
+            ->assertJsonFragment([
+                'title' => 'Sem prioridade',
+                'priority' => 'medium',
+            ]);
+
+        $this->assertDatabaseHas('tasks', [
+            'title' => 'Sem prioridade',
+            'priority' => 'medium',
+            'user_id' => $this->user->id,
+        ]);
+    }
+
+    public function test_it_rejects_invalid_priority(): void
+    {
+        $this->postJson('/api/tasks', [
+            'title' => 'Prioridade inválida',
+            'priority' => 'urgent',
+        ])->assertUnprocessable();
+    }
+
+    public function test_it_updates_task_priority(): void
+    {
+        $task = Task::factory()->create([
+            'title' => 'Ajustar prioridade',
+            'priority' => 'medium',
+            'user_id' => $this->user->id,
+        ]);
+
+        $this->patchJson("/api/tasks/{$task->id}/priority", ['priority' => 'low'])
+            ->assertOk()
+            ->assertJsonFragment([
+                'title' => 'Ajustar prioridade',
+                'priority' => 'low',
+            ]);
+
+        $this->assertDatabaseHas('tasks', [
+            'id' => $task->id,
+            'priority' => 'low',
+        ]);
+    }
+
+    public function test_it_rejects_invalid_priority_on_update(): void
+    {
+        $task = Task::factory()->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        $this->patchJson("/api/tasks/{$task->id}/priority", ['priority' => 'urgent'])
+            ->assertUnprocessable();
+    }
+
     public function test_it_creates_a_task_with_due_date(): void
     {
         $this->postJson('/api/tasks', [

@@ -22,6 +22,7 @@ class CreateTaskServiceTest extends TestCase
                 'done' => false,
                 'user_id' => 42,
                 'due_date' => null,
+                'priority' => 'medium',
             ])
             ->andReturn($expected);
 
@@ -50,6 +51,7 @@ class CreateTaskServiceTest extends TestCase
                 'done' => false,
                 'user_id' => 7,
                 'due_date' => '2026-09-10',
+                'priority' => 'medium',
             ])
             ->andReturn($expected);
 
@@ -60,5 +62,61 @@ class CreateTaskServiceTest extends TestCase
         ], 7);
 
         $this->assertSame('2026-09-10', $task->due_date?->format('Y-m-d'));
+    }
+
+    public function test_it_defaults_priority_to_medium(): void
+    {
+        $repository = Mockery::mock(TaskRepositoryInterface::class);
+        $expected = new Task([
+            'title' => 'Sem prioridade explícita',
+            'done' => false,
+            'user_id' => 5,
+            'due_date' => null,
+            'priority' => 'medium',
+        ]);
+
+        $repository->shouldReceive('create')
+            ->once()
+            ->with([
+                'title' => 'Sem prioridade explícita',
+                'done' => false,
+                'user_id' => 5,
+                'due_date' => null,
+                'priority' => 'medium',
+            ])
+            ->andReturn($expected);
+
+        $service = new CreateTaskService($repository);
+        $task = $service->handle(['title' => 'Sem prioridade explícita'], 5);
+
+        $this->assertSame('medium', $task->priority);
+    }
+
+    public function test_it_creates_a_task_with_explicit_high_priority(): void
+    {
+        $repository = Mockery::mock(TaskRepositoryInterface::class);
+        $expected = new Task([
+            'title' => 'Urgente',
+            'done' => false,
+            'user_id' => 5,
+            'due_date' => null,
+            'priority' => 'high',
+        ]);
+
+        $repository->shouldReceive('create')
+            ->once()
+            ->with([
+                'title' => 'Urgente',
+                'done' => false,
+                'user_id' => 5,
+                'due_date' => null,
+                'priority' => 'high',
+            ])
+            ->andReturn($expected);
+
+        $service = new CreateTaskService($repository);
+        $task = $service->handle(['title' => 'Urgente', 'priority' => 'high'], 5);
+
+        $this->assertSame('high', $task->priority);
     }
 }

@@ -15,10 +15,11 @@ import {
   listTasks,
   toggleTask,
   updateTaskTitle,
+  updateTaskPriority,
   type CreateTaskInput,
   type TaskStatusFilterValue,
 } from "./taskApi";
-import type { Task } from "./types";
+import type { Task, TaskPriority } from "./types";
 
 type TaskContextValue = {
   tasks: Task[];
@@ -29,6 +30,7 @@ type TaskContextValue = {
   setStatusFilter: (status: TaskStatusFilterValue) => void;
   addTask: (input: CreateTaskInput) => Promise<void>;
   renameTask: (id: number, title: string) => Promise<void>;
+  changePriority: (id: number, priority: TaskPriority) => Promise<void>;
   completeTask: (id: number) => Promise<void>;
   archiveTask: (id: number) => Promise<void>;
   removeTask: (id: number) => Promise<void>;
@@ -71,6 +73,11 @@ export function TaskProvider({ children }: { children: ReactNode }) {
     setTasks((current) => current.map((task) => (task.id === id ? updated : task)));
   }, []);
 
+  const changePriority = useCallback(async (id: number, priority: TaskPriority) => {
+    const updated = await updateTaskPriority(id, priority);
+    setTasks((current) => current.map((task) => (task.id === id ? updated : task)));
+  }, []);
+
   const completeTask = useCallback(async (id: number) => {
     const updated = await toggleTask(id);
     setTasks((current) => current.map((task) => (task.id === id ? updated : task)));
@@ -104,6 +111,7 @@ export function TaskProvider({ children }: { children: ReactNode }) {
       setStatusFilter,
       addTask,
       renameTask,
+      changePriority,
       completeTask,
       archiveTask,
       removeTask,
@@ -118,6 +126,7 @@ export function TaskProvider({ children }: { children: ReactNode }) {
       setStatusFilter,
       addTask,
       renameTask,
+      changePriority,
       completeTask,
       archiveTask,
       removeTask,

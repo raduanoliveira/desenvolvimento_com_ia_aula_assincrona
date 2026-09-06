@@ -21,4 +21,3 @@ Com TDD, a feature nasceu com contrato executável e histórico auditável. Sem 
 
 - Com TDD: `docs/harness-tdd-com.md`
 - Sem TDD: `docs/harness-tdd-sem.md`
-- Superpowers: `docs/harness-tdd-enforcement.md`

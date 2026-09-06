@@ -1,4 +1,4 @@
-import type { Task } from "./types";
+import type { Task, TaskPriority } from "./types";
 
 const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:8000/api";
 
@@ -26,6 +26,7 @@ export async function listTasks(status: TaskStatusFilterValue = "all"): Promise<
 export type CreateTaskInput = {
   title: string;
   due_date?: string | null;
+  priority?: TaskPriority;
 };
 
 export async function createTask(input: CreateTaskInput): Promise<Task> {
@@ -36,6 +37,7 @@ export async function createTask(input: CreateTaskInput): Promise<Task> {
     body: JSON.stringify({
       title: input.title,
       due_date: input.due_date || null,
+      ...(input.priority ? { priority: input.priority } : {}),
     }),
   });
   if (!response.ok) {
@@ -63,6 +65,20 @@ export async function updateTaskTitle(id: number, title: string): Promise<Task> 
     credentials: "include",
     headers: { "Content-Type": "application/json", ...jsonHeaders },
     body: JSON.stringify({ title }),
+  });
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+  const payload = await response.json();
+  return payload.data ?? payload;
+}
+
+export async function updateTaskPriority(id: number, priority: TaskPriority): Promise<Task> {
+  const response = await fetch(`${apiUrl}/tasks/${id}/priority`, {
+    method: "PATCH",
+    credentials: "include",
+    headers: { "Content-Type": "application/json", ...jsonHeaders },
+    body: JSON.stringify({ priority }),
   });
   if (!response.ok) {
     throw await parseError(response);

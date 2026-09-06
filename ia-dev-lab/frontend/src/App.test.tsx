@@ -45,7 +45,7 @@ describe("App", () => {
       email: "ana@example.com",
     });
     vi.mocked(api.listTasks).mockResolvedValue([
-      { id: 1, title: "Pagar conta", done: false, archived: false, due_date: null },
+      { id: 1, title: "Pagar conta", done: false, archived: false, due_date: null, priority: "medium" },
     ]);
 
     renderApp();

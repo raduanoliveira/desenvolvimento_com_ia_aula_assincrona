@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ListTasksRequest;
 use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskPriorityRequest;
 use App\Http\Requests\UpdateTaskTitleRequest;
 use App\Http\Resources\TaskResource;
 use App\Services\ArchiveTaskService;
@@ -12,6 +13,7 @@ use App\Services\CreateTaskService;
 use App\Services\DeleteTaskService;
 use App\Services\ListTasksService;
 use App\Services\ToggleTaskService;
+use App\Services\UpdateTaskPriorityService;
 use App\Services\UpdateTaskTitleService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -38,6 +40,11 @@ class TaskController extends Controller
     public function updateTitle(UpdateTaskTitleRequest $request, int $task, UpdateTaskTitleService $service): TaskResource
     {
         return new TaskResource($service->handle($task, $request->user()->id, $request->validated('title')));
+    }
+
+    public function updatePriority(UpdateTaskPriorityRequest $request, int $task, UpdateTaskPriorityService $service): TaskResource
+    {
+        return new TaskResource($service->handle($task, $request->user()->id, $request->validated('priority')));
     }
 
     public function toggle(Request $request, int $task, ToggleTaskService $service): TaskResource

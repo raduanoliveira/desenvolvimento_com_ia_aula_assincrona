@@ -1,4 +1,4 @@
-import { archiveTask, createTask, listDueTomorrowReminders, listTasks } from "./taskApi";
+import { archiveTask, createTask, listDueTomorrowReminders, listTasks, updateTaskPriority } from "./taskApi";
 
 describe("taskApi", () => {
   afterEach(() => {
@@ -26,6 +26,58 @@ describe("taskApi", () => {
       title: "Comprar pão",
       due_date: "2026-09-10",
     });
+  });
+
+  it("envia POST com prioridade high", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        data: {
+          id: 1,
+          title: "Entrega urgente",
+          done: false,
+          archived: false,
+          due_date: null,
+          priority: "high",
+        },
+      }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const task = await createTask({ title: "Entrega urgente", priority: "high" });
+
+    expect(task.priority).toBe("high");
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
+      title: "Entrega urgente",
+      due_date: null,
+      priority: "high",
+    });
+  });
+
+  it("envia PATCH para atualizar prioridade com credentials include", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        data: {
+          id: 4,
+          title: "Relatório",
+          done: false,
+          archived: false,
+          due_date: null,
+          priority: "low",
+        },
+      }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const task = await updateTaskPriority(4, "low");
+
+    expect(task.priority).toBe("low");
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("/tasks/4/priority"),
+      expect.objectContaining({ method: "PATCH", credentials: "include" })
+    );
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ priority: "low" });
   });
 
   it("envia PATCH para arquivar tarefa com credentials include", async () => {

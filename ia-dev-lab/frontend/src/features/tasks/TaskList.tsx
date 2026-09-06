@@ -10,12 +10,17 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { useTaskContext } from "./TaskContext";
+import { PRIORITY_LABELS, type TaskPriority } from "./types";
 
 function formatDueDate(dueDate: string): string {
   const [year, month, day] = dueDate.split("-");
@@ -23,7 +28,7 @@ function formatDueDate(dueDate: string): string {
 }
 
 export function TaskList() {
-  const { tasks, error, renameTask, completeTask, archiveTask, removeTask } = useTaskContext();
+  const { tasks, error, renameTask, changePriority, completeTask, archiveTask, removeTask } = useTaskContext();
   const [editingId, setEditingId] = useState<number | null>(null);
   const [draftTitle, setDraftTitle] = useState("");
 
@@ -129,6 +134,22 @@ export function TaskList() {
                   {task.due_date ? (
                     <Chip size="small" label={`Prazo ${formatDueDate(task.due_date)}`} variant="outlined" />
                   ) : null}
+                  <FormControl size="small" sx={{ minWidth: 120 }}>
+                    <InputLabel id={`priority-${task.id}`}>Prioridade</InputLabel>
+                    <Select
+                      labelId={`priority-${task.id}`}
+                      label="Prioridade"
+                      value={task.priority}
+                      inputProps={{ "aria-label": `Prioridade de ${task.title}` }}
+                      onChange={(event) => void changePriority(task.id, event.target.value as TaskPriority)}
+                    >
+                      {(Object.keys(PRIORITY_LABELS) as TaskPriority[]).map((value) => (
+                        <MenuItem key={value} value={value}>
+                          {PRIORITY_LABELS[value]}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Stack>
               }
               secondaryTypographyProps={{ component: "div" }}

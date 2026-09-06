@@ -37,6 +37,10 @@ class TaskIsolationApiTest extends TestCase
             ->deleteJson("/api/tasks/{$task->id}")
             ->assertNotFound();
 
+        $this->actingAs($userB)
+            ->patchJson("/api/tasks/{$task->id}/priority", ['priority' => 'high'])
+            ->assertNotFound();
+
         $this->assertDatabaseHas('tasks', [
             'id' => $task->id,
             'title' => 'Pagar conta',

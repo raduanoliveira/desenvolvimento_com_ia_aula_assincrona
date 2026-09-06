@@ -19,6 +19,7 @@ class TaskFactory extends Factory
             'done' => false,
             'archived' => false,
             'due_date' => null,
+            'priority' => 'medium',
             'user_id' => null,
         ];
     }

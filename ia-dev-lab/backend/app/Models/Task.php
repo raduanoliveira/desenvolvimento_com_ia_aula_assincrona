@@ -16,6 +16,7 @@ class Task extends Model
         'archived',
         'due_date',
         'user_id',
+        'priority',
     ];
 
     protected function casts(): array
