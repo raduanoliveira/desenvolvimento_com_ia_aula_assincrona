@@ -8,8 +8,11 @@ async function parseError(response: Response): Promise<Error> {
   return new Error(`HTTP ${response.status}`);
 }
 
-export async function listTasks(): Promise<Task[]> {
-  const response = await fetch(`${apiUrl}/tasks`, {
+export type TaskStatusFilterValue = "all" | "pending" | "done";
+
+export async function listTasks(status: TaskStatusFilterValue = "all"): Promise<Task[]> {
+  const query = status === "all" ? "" : `?status=${encodeURIComponent(status)}`;
+  const response = await fetch(`${apiUrl}/tasks${query}`, {
     credentials: "include",
     headers: jsonHeaders,
   });

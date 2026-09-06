@@ -9,11 +9,14 @@ import { useAuthContext } from "./features/auth/AuthContext";
 import { DueRemindersToaster } from "./features/tasks/DueRemindersToaster";
 import { TaskForm } from "./features/tasks/TaskForm";
 import { TaskList } from "./features/tasks/TaskList";
+import { TaskStatusFilter } from "./features/tasks/TaskStatusFilter";
 import { TaskSummary } from "./features/tasks/TaskSummary";
-import { TaskProvider } from "./features/tasks/TaskContext";
+import { TaskProvider, useTaskContext } from "./features/tasks/TaskContext";
 import { DashboardLayout } from "./layout/DashboardLayout";
 
 function TaskDashboard() {
+  const { statusFilter, setStatusFilter } = useTaskContext();
+
   return (
     <DashboardLayout title="Minhas tarefas" subtitle="Crie, conclua, arquive ou exclua tarefas.">
       <DueRemindersToaster />
@@ -28,7 +31,10 @@ function TaskDashboard() {
         <Card sx={{ borderRadius: 4 }}>
           <CardHeader title="Lista" subheader="Marque para concluir, arquive ou exclua o item" />
           <CardContent>
-            <TaskList />
+            <Stack spacing={2}>
+              <TaskStatusFilter value={statusFilter} onChange={setStatusFilter} />
+              <TaskList />
+            </Stack>
           </CardContent>
         </Card>
       </Stack>

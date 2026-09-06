@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ListTasksRequest;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Services\ArchiveTaskService;
@@ -16,9 +17,11 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TaskController extends Controller
 {
-    public function index(Request $request, ListTasksService $service): AnonymousResourceCollection
+    public function index(ListTasksRequest $request, ListTasksService $service): AnonymousResourceCollection
     {
-        return TaskResource::collection($service->handle($request->user()->id));
+        $status = $request->validated('status') ?? 'all';
+
+        return TaskResource::collection($service->handle($request->user()->id, $status));
     }
 
     public function store(StoreTaskRequest $request, CreateTaskService $service): JsonResponse

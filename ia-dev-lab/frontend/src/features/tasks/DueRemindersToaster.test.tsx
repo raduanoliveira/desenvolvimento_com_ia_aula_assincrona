@@ -11,8 +11,10 @@ describe("DueRemindersToaster", () => {
     vi.mocked(useTaskContext).mockReturnValue({
       tasks: [],
       reminders: [{ id: 1, title: "Prova", done: false, archived: false, due_date: "2026-09-07" }],
+      statusFilter: "all",
       error: null,
       loadTasks: vi.fn(),
+      setStatusFilter: vi.fn(),
       addTask: vi.fn(),
       completeTask: vi.fn(),
       archiveTask: vi.fn(),
@@ -30,8 +32,10 @@ describe("DueRemindersToaster", () => {
     vi.mocked(useTaskContext).mockReturnValue({
       tasks: [],
       reminders: [{ id: 1, title: "Prova", done: false, archived: false, due_date: "2026-09-07" }],
+      statusFilter: "all",
       error: null,
       loadTasks: vi.fn(),
+      setStatusFilter: vi.fn(),
       addTask: vi.fn(),
       completeTask: vi.fn(),
       archiveTask: vi.fn(),

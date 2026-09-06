@@ -15,14 +15,17 @@ import {
   listTasks,
   toggleTask,
   type CreateTaskInput,
+  type TaskStatusFilterValue,
 } from "./taskApi";
 import type { Task } from "./types";
 
 type TaskContextValue = {
   tasks: Task[];
   reminders: Task[];
+  statusFilter: TaskStatusFilterValue;
   error: string | null;
   loadTasks: () => Promise<void>;
+  setStatusFilter: (status: TaskStatusFilterValue) => void;
   addTask: (input: CreateTaskInput) => Promise<void>;
   completeTask: (id: number) => Promise<void>;
   archiveTask: (id: number) => Promise<void>;
@@ -35,13 +38,14 @@ const TaskContext = createContext<TaskContextValue | null>(null);
 export function TaskProvider({ children }: { children: ReactNode }) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [reminders, setReminders] = useState<Task[]>([]);
+  const [statusFilter, setStatusFilterState] = useState<TaskStatusFilterValue>("all");
   const [error, setError] = useState<string | null>(null);
 
   const loadTasks = useCallback(async () => {
     try {
       setError(null);
       const [nextTasks, nextReminders] = await Promise.all([
-        listTasks(),
+        listTasks(statusFilter),
         listDueTomorrowReminders(),
       ]);
       setTasks(nextTasks);
@@ -49,6 +53,10 @@ export function TaskProvider({ children }: { children: ReactNode }) {
     } catch {
       setError("Não foi possível carregar as tarefas.");
     }
+  }, [statusFilter]);
+
+  const setStatusFilter = useCallback((status: TaskStatusFilterValue) => {
+    setStatusFilterState(status);
   }, []);
 
   const addTask = useCallback(async (input: CreateTaskInput) => {
@@ -83,15 +91,29 @@ export function TaskProvider({ children }: { children: ReactNode }) {
     () => ({
       tasks,
       reminders,
+      statusFilter,
       error,
       loadTasks,
+      setStatusFilter,
       addTask,
       completeTask,
       archiveTask,
       removeTask,
       dismissReminders,
     }),
-    [tasks, reminders, error, loadTasks, addTask, completeTask, archiveTask, removeTask, dismissReminders]
+    [
+      tasks,
+      reminders,
+      statusFilter,
+      error,
+      loadTasks,
+      setStatusFilter,
+      addTask,
+      completeTask,
+      archiveTask,
+      removeTask,
+      dismissReminders,
+    ]
   );
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;

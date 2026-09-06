@@ -12,8 +12,10 @@ describe("TaskForm", () => {
     vi.mocked(useTaskContext).mockReturnValue({
       tasks: [],
       reminders: [],
+      statusFilter: "all",
       error: null,
       loadTasks: vi.fn(),
+      setStatusFilter: vi.fn(),
       addTask,
       completeTask: vi.fn(),
       archiveTask: vi.fn(),
