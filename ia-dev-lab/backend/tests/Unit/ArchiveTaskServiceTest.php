@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use App\Models\Task;
 use App\Repositories\Contracts\TaskRepositoryInterface;
 use App\Services\ArchiveTaskService;
 use Mockery;
+use Tests\DomainTaskFactory;
 use Tests\TestCase;
 
 class ArchiveTaskServiceTest extends TestCase
@@ -13,8 +13,20 @@ class ArchiveTaskServiceTest extends TestCase
     public function test_it_archives_a_task_without_deleting_it(): void
     {
         $repository = Mockery::mock(TaskRepositoryInterface::class);
-        $task = new Task(['title' => 'Relatório da aula', 'done' => false, 'archived' => false]);
-        $archived = new Task(['title' => 'Relatório da aula', 'done' => false, 'archived' => true]);
+        $task = DomainTaskFactory::make([
+            'id' => 7,
+            'title' => 'Relatório da aula',
+            'done' => false,
+            'archived' => false,
+            'user_id' => 42,
+        ]);
+        $archived = DomainTaskFactory::make([
+            'id' => 7,
+            'title' => 'Relatório da aula',
+            'done' => false,
+            'archived' => true,
+            'user_id' => 42,
+        ]);
 
         $repository->shouldReceive('findForUser')
             ->once()

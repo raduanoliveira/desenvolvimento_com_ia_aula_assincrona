@@ -23,6 +23,7 @@ Rode na pasta do laboratório.
 - Regra de negócio na camada de aplicação (Service), não no controller e não na tela
 - Validação na entrada da API, fora do controller
 - Persistência atrás de abstração (Repository), não acoplada à regra de negócio
+- Tarefa na aplicação é `App\Domain\Task`. Eloquent fica só no Adapter do repositório. Não lançar `ModelNotFoundException` no Service
 - Frontend com TypeScript, estado compartilhado no Context e UI em MUI
 - Layout moderno: hierarquia clara, espaçamento generoso, cards e status visível. Não entregue tela crua
 - Organize por domínio (API de um lado, interface do outro)

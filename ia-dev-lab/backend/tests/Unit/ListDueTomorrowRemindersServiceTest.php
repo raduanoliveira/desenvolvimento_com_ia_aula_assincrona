@@ -2,12 +2,12 @@
 
 namespace Tests\Unit;
 
-use App\Models\Task;
 use App\Repositories\Contracts\TaskRepositoryInterface;
 use App\Services\ListDueTomorrowRemindersService;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Mockery;
+use Tests\DomainTaskFactory;
 use Tests\TestCase;
 
 class ListDueTomorrowRemindersServiceTest extends TestCase
@@ -16,7 +16,7 @@ class ListDueTomorrowRemindersServiceTest extends TestCase
     {
         Carbon::setTestNow('2026-09-06 10:00:00');
 
-        $tomorrow = new Task([
+        $tomorrow = DomainTaskFactory::make([
             'id' => 1,
             'title' => 'Prova amanhã',
             'done' => false,
@@ -24,7 +24,7 @@ class ListDueTomorrowRemindersServiceTest extends TestCase
             'due_date' => '2026-09-07',
             'user_id' => 3,
         ]);
-        $today = new Task([
+        $today = DomainTaskFactory::make([
             'id' => 2,
             'title' => 'Hoje',
             'done' => false,
@@ -32,7 +32,7 @@ class ListDueTomorrowRemindersServiceTest extends TestCase
             'due_date' => '2026-09-06',
             'user_id' => 3,
         ]);
-        $done = new Task([
+        $done = DomainTaskFactory::make([
             'id' => 3,
             'title' => 'Já feita',
             'done' => true,
@@ -40,7 +40,7 @@ class ListDueTomorrowRemindersServiceTest extends TestCase
             'due_date' => '2026-09-07',
             'user_id' => 3,
         ]);
-        $archived = new Task([
+        $archived = DomainTaskFactory::make([
             'id' => 4,
             'title' => 'Arquivada',
             'done' => false,

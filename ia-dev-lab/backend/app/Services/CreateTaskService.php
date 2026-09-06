@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Task;
+use App\Domain\Task;
 use App\Repositories\Contracts\TaskRepositoryInterface;
 
 class CreateTaskService

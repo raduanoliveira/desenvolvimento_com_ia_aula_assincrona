@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Task;
+use App\Domain\Task;
 use App\Repositories\Contracts\TaskRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -19,21 +19,11 @@ class ListDueTomorrowRemindersService
 
         return $this->tasks->allForUser($ownerId)
             ->filter(function (Task $task) use ($tomorrow) {
-                if ($task->archived || $task->done) {
+                if ($task->archived || $task->done || $task->due_date === null) {
                     return false;
                 }
 
-                $dueDate = $task->due_date;
-
-                if ($dueDate === null) {
-                    return false;
-                }
-
-                $normalized = $dueDate instanceof Carbon
-                    ? $dueDate->toDateString()
-                    : Carbon::parse((string) $dueDate)->toDateString();
-
-                return $normalized === $tomorrow;
+                return $task->due_date === $tomorrow;
             })
             ->values();
     }

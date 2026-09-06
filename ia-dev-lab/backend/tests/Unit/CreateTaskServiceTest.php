@@ -2,10 +2,11 @@
 
 namespace Tests\Unit;
 
-use App\Models\Task;
+use App\Domain\Task;
 use App\Repositories\Contracts\TaskRepositoryInterface;
 use App\Services\CreateTaskService;
 use Mockery;
+use Tests\DomainTaskFactory;
 use Tests\TestCase;
 
 class CreateTaskServiceTest extends TestCase
@@ -13,7 +14,11 @@ class CreateTaskServiceTest extends TestCase
     public function test_it_creates_a_pending_task_with_trimmed_title(): void
     {
         $repository = Mockery::mock(TaskRepositoryInterface::class);
-        $expected = new Task(['title' => 'Ler o enunciado', 'done' => false, 'user_id' => 42]);
+        $expected = DomainTaskFactory::make([
+            'title' => 'Ler o enunciado',
+            'done' => false,
+            'user_id' => 42,
+        ]);
 
         $repository->shouldReceive('create')
             ->once()
@@ -29,6 +34,7 @@ class CreateTaskServiceTest extends TestCase
         $service = new CreateTaskService($repository);
         $task = $service->handle(['title' => '  Ler o enunciado  '], 42);
 
+        $this->assertInstanceOf(Task::class, $task);
         $this->assertSame('Ler o enunciado', $task->title);
         $this->assertFalse($task->done);
         $this->assertSame(42, $task->user_id);
@@ -37,7 +43,7 @@ class CreateTaskServiceTest extends TestCase
     public function test_it_creates_a_task_with_due_date(): void
     {
         $repository = Mockery::mock(TaskRepositoryInterface::class);
-        $expected = new Task([
+        $expected = DomainTaskFactory::make([
             'title' => 'Entregar relatório',
             'done' => false,
             'user_id' => 7,
@@ -61,13 +67,13 @@ class CreateTaskServiceTest extends TestCase
             'due_date' => '2026-09-10',
         ], 7);
 
-        $this->assertSame('2026-09-10', $task->due_date?->format('Y-m-d'));
+        $this->assertSame('2026-09-10', $task->due_date);
     }
 
     public function test_it_defaults_priority_to_medium(): void
     {
         $repository = Mockery::mock(TaskRepositoryInterface::class);
-        $expected = new Task([
+        $expected = DomainTaskFactory::make([
             'title' => 'Sem prioridade explícita',
             'done' => false,
             'user_id' => 5,
@@ -95,7 +101,7 @@ class CreateTaskServiceTest extends TestCase
     public function test_it_creates_a_task_with_explicit_high_priority(): void
     {
         $repository = Mockery::mock(TaskRepositoryInterface::class);
-        $expected = new Task([
+        $expected = DomainTaskFactory::make([
             'title' => 'Urgente',
             'done' => false,
             'user_id' => 5,

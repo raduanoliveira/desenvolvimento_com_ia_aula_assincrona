@@ -2,11 +2,12 @@
 
 namespace Tests\Unit;
 
-use App\Models\Task;
+use App\Domain\Task;
+use App\Domain\TaskNotFoundException;
 use App\Repositories\Contracts\TaskRepositoryInterface;
 use App\Services\UpdateTaskPriorityService;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Mockery;
+use Tests\DomainTaskFactory;
 use Tests\TestCase;
 
 class UpdateTaskPriorityServiceTest extends TestCase
@@ -14,8 +15,8 @@ class UpdateTaskPriorityServiceTest extends TestCase
     public function test_it_updates_priority_for_the_owner(): void
     {
         $repository = Mockery::mock(TaskRepositoryInterface::class);
-        $task = new Task(['title' => 'Relatório', 'priority' => 'medium']);
-        $updated = new Task(['title' => 'Relatório', 'priority' => 'high']);
+        $task = DomainTaskFactory::make(['id' => 4, 'title' => 'Relatório', 'priority' => 'medium', 'user_id' => 42]);
+        $updated = DomainTaskFactory::make(['id' => 4, 'title' => 'Relatório', 'priority' => 'high', 'user_id' => 42]);
 
         $repository->shouldReceive('findForUser')
             ->once()
@@ -39,7 +40,7 @@ class UpdateTaskPriorityServiceTest extends TestCase
         $repository->shouldReceive('findForUser')->once()->with(4, 99)->andReturn(null);
         $repository->shouldNotReceive('update');
 
-        $this->expectException(ModelNotFoundException::class);
+        $this->expectException(TaskNotFoundException::class);
 
         (new UpdateTaskPriorityService($repository))->handle(4, 99, 'low');
     }

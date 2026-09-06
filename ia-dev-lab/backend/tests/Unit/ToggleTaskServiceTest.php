@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use App\Models\Task;
+use App\Domain\TaskNotFoundException;
 use App\Repositories\Contracts\TaskRepositoryInterface;
 use App\Services\ToggleTaskService;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Mockery;
+use Tests\DomainTaskFactory;
 use Tests\TestCase;
 
 class ToggleTaskServiceTest extends TestCase
@@ -14,8 +14,8 @@ class ToggleTaskServiceTest extends TestCase
     public function test_it_toggles_a_task_owned_by_the_user(): void
     {
         $repository = Mockery::mock(TaskRepositoryInterface::class);
-        $task = new Task(['title' => 'Pagar conta', 'done' => false]);
-        $toggled = new Task(['title' => 'Pagar conta', 'done' => true]);
+        $task = DomainTaskFactory::make(['id' => 3, 'title' => 'Pagar conta', 'done' => false, 'user_id' => 42]);
+        $toggled = DomainTaskFactory::make(['id' => 3, 'title' => 'Pagar conta', 'done' => true, 'user_id' => 42]);
 
         $repository->shouldReceive('findForUser')
             ->once()
@@ -39,7 +39,7 @@ class ToggleTaskServiceTest extends TestCase
         $repository->shouldReceive('findForUser')->once()->with(3, 99)->andReturn(null);
         $repository->shouldNotReceive('update');
 
-        $this->expectException(ModelNotFoundException::class);
+        $this->expectException(TaskNotFoundException::class);
 
         (new ToggleTaskService($repository))->handle(3, 99);
     }

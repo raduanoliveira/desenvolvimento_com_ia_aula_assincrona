@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-use App\Models\Task;
+use App\Domain\Task;
 use Illuminate\Support\Collection;
 
 interface TaskRepositoryInterface
