@@ -22,6 +22,10 @@ function renderApp() {
 }
 
 describe("App", () => {
+  beforeEach(() => {
+    vi.mocked(api.listDueTomorrowReminders).mockResolvedValue([]);
+  });
+
   it("mostra só a tela de entrada quando não há sessão", async () => {
     vi.mocked(authApi.getSession).mockResolvedValue(null);
 
@@ -41,7 +45,7 @@ describe("App", () => {
       email: "ana@example.com",
     });
     vi.mocked(api.listTasks).mockResolvedValue([
-      { id: 1, title: "Pagar conta", done: false, archived: false },
+      { id: 1, title: "Pagar conta", done: false, archived: false, due_date: null },
     ]);
 
     renderApp();

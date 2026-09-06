@@ -1,31 +1,38 @@
-import { archiveTask, createTask, listTasks } from "./taskApi";
+import { archiveTask, createTask, listDueTomorrowReminders, listTasks } from "./taskApi";
 
 describe("taskApi", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
 
-  it("envia POST para criar tarefa com credentials include", async () => {
+  it("envia POST para criar tarefa com prazo e credentials include", async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ data: { id: 1, title: "Comprar pão", done: false } }),
+      json: async () => ({
+        data: { id: 1, title: "Comprar pão", done: false, archived: false, due_date: "2026-09-10" },
+      }),
     });
     vi.stubGlobal("fetch", fetchMock);
 
-    const task = await createTask("Comprar pão");
+    const task = await createTask({ title: "Comprar pão", due_date: "2026-09-10" });
 
     expect(task.title).toBe("Comprar pão");
+    expect(task.due_date).toBe("2026-09-10");
     expect(fetchMock).toHaveBeenCalledWith(
       expect.stringContaining("/tasks"),
       expect.objectContaining({ method: "POST", credentials: "include" })
     );
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
+      title: "Comprar pão",
+      due_date: "2026-09-10",
+    });
   });
 
   it("envia PATCH para arquivar tarefa com credentials include", async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({
-        data: { id: 3, title: "Relatório", done: false, archived: true },
+        data: { id: 3, title: "Relatório", done: false, archived: true, due_date: null },
       }),
     });
     vi.stubGlobal("fetch", fetchMock);
@@ -50,6 +57,24 @@ describe("taskApi", () => {
 
     expect(fetchMock).toHaveBeenCalledWith(
       expect.stringContaining("/tasks"),
+      expect.objectContaining({ credentials: "include" })
+    );
+  });
+
+  it("envia GET para lembretes de amanhã com credentials include", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        data: [{ id: 2, title: "Prova", done: false, archived: false, due_date: "2026-09-07" }],
+      }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const reminders = await listDueTomorrowReminders();
+
+    expect(reminders).toHaveLength(1);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("/reminders/due-tomorrow"),
       expect.objectContaining({ credentials: "include" })
     );
   });

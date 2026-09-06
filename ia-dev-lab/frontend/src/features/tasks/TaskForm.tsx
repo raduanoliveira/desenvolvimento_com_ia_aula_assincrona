@@ -8,6 +8,7 @@ import { useTaskContext } from "./TaskContext";
 export function TaskForm() {
   const { addTask } = useTaskContext();
   const [title, setTitle] = useState("");
+  const [dueDate, setDueDate] = useState("");
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -15,8 +16,12 @@ export function TaskForm() {
     if (!value) {
       return;
     }
-    await addTask(value);
+    await addTask({
+      title: value,
+      due_date: dueDate || null,
+    });
     setTitle("");
+    setDueDate("");
   }
 
   return (
@@ -27,6 +32,14 @@ export function TaskForm() {
         value={title}
         onChange={(event) => setTitle(event.target.value)}
         fullWidth
+      />
+      <TextField
+        label="Prazo"
+        type="date"
+        value={dueDate}
+        onChange={(event) => setDueDate(event.target.value)}
+        InputLabelProps={{ shrink: true }}
+        sx={{ minWidth: { sm: 180 } }}
       />
       <Button type="submit" variant="contained" startIcon={<AddIcon />} sx={{ px: 3, whiteSpace: "nowrap" }}>
         Adicionar

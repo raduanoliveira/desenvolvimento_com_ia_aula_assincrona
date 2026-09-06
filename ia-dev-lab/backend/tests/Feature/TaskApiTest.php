@@ -38,7 +38,7 @@ class TaskApiTest extends TestCase
     {
         $this->postJson('/api/tasks', ['title' => 'Comprar pão'])
             ->assertCreated()
-            ->assertJsonFragment(['title' => 'Comprar pão', 'done' => false])
+            ->assertJsonFragment(['title' => 'Comprar pão', 'done' => false, 'due_date' => null])
             ->assertJsonMissingPath('data.user_id');
 
         $this->assertDatabaseHas('tasks', [
@@ -46,6 +46,62 @@ class TaskApiTest extends TestCase
             'done' => false,
             'user_id' => $this->user->id,
         ]);
+    }
+
+    public function test_it_creates_a_task_with_due_date(): void
+    {
+        $this->postJson('/api/tasks', [
+            'title' => 'Entregar relatório',
+            'due_date' => '2026-09-10',
+        ])
+            ->assertCreated()
+            ->assertJsonFragment([
+                'title' => 'Entregar relatório',
+                'due_date' => '2026-09-10',
+            ]);
+
+        $this->assertDatabaseHas('tasks', [
+            'title' => 'Entregar relatório',
+            'due_date' => '2026-09-10',
+            'user_id' => $this->user->id,
+        ]);
+    }
+
+    public function test_it_rejects_invalid_due_date(): void
+    {
+        $this->postJson('/api/tasks', [
+            'title' => 'Data inválida',
+            'due_date' => '10-09-2026',
+        ])->assertUnprocessable();
+    }
+
+    public function test_it_lists_due_tomorrow_reminders_for_the_owner(): void
+    {
+        \Carbon\Carbon::setTestNow('2026-09-06 09:00:00');
+
+        Task::factory()->create([
+            'title' => 'Lembra amanhã',
+            'due_date' => '2026-09-07',
+            'user_id' => $this->user->id,
+        ]);
+        Task::factory()->create([
+            'title' => 'Outro dia',
+            'due_date' => '2026-09-08',
+            'user_id' => $this->user->id,
+        ]);
+        Task::factory()->create([
+            'title' => 'De outra pessoa',
+            'due_date' => '2026-09-07',
+            'user_id' => User::factory()->create()->id,
+        ]);
+
+        $this->getJson('/api/reminders/due-tomorrow')
+            ->assertOk()
+            ->assertJsonFragment(['title' => 'Lembra amanhã'])
+            ->assertJsonMissing(['title' => 'Outro dia'])
+            ->assertJsonMissing(['title' => 'De outra pessoa']);
+
+        \Carbon\Carbon::setTestNow();
     }
 
     public function test_it_rejects_empty_title(): void

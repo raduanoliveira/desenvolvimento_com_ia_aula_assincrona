@@ -14,6 +14,7 @@ class Task extends Model
         'title',
         'done',
         'archived',
+        'due_date',
         'user_id',
     ];
 
@@ -22,6 +23,7 @@ class Task extends Model
         return [
             'done' => 'boolean',
             'archived' => 'boolean',
+            'due_date' => 'date:Y-m-d',
         ];
     }
 

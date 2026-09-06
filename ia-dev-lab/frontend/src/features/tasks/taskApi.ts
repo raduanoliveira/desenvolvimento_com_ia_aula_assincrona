@@ -20,12 +20,32 @@ export async function listTasks(): Promise<Task[]> {
   return payload.data ?? payload;
 }
 
-export async function createTask(title: string): Promise<Task> {
+export type CreateTaskInput = {
+  title: string;
+  due_date?: string | null;
+};
+
+export async function createTask(input: CreateTaskInput): Promise<Task> {
   const response = await fetch(`${apiUrl}/tasks`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json", ...jsonHeaders },
-    body: JSON.stringify({ title }),
+    body: JSON.stringify({
+      title: input.title,
+      due_date: input.due_date || null,
+    }),
+  });
+  if (!response.ok) {
+    throw await parseError(response);
+  }
+  const payload = await response.json();
+  return payload.data ?? payload;
+}
+
+export async function listDueTomorrowReminders(): Promise<Task[]> {
+  const response = await fetch(`${apiUrl}/reminders/due-tomorrow`, {
+    credentials: "include",
+    headers: jsonHeaders,
   });
   if (!response.ok) {
     throw await parseError(response);

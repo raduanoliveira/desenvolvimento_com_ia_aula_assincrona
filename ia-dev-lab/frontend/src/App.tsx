@@ -6,6 +6,7 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import { SignInScreen } from "./features/auth/SignInScreen";
 import { useAuthContext } from "./features/auth/AuthContext";
+import { DueRemindersToaster } from "./features/tasks/DueRemindersToaster";
 import { TaskForm } from "./features/tasks/TaskForm";
 import { TaskList } from "./features/tasks/TaskList";
 import { TaskSummary } from "./features/tasks/TaskSummary";
@@ -15,10 +16,11 @@ import { DashboardLayout } from "./layout/DashboardLayout";
 function TaskDashboard() {
   return (
     <DashboardLayout title="Minhas tarefas" subtitle="Crie, conclua, arquive ou exclua tarefas.">
+      <DueRemindersToaster />
       <Stack spacing={3}>
         <TaskSummary />
         <Card sx={{ borderRadius: 4 }}>
-          <CardHeader title="Nova tarefa" subheader="O título é obrigatório" />
+          <CardHeader title="Nova tarefa" subheader="O título é obrigatório; o prazo é opcional" />
           <CardContent>
             <TaskForm />
           </CardContent>

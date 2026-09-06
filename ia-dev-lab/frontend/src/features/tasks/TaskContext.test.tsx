@@ -22,9 +22,13 @@ function TasksProbe() {
 }
 
 describe("TaskContext", () => {
+  beforeEach(() => {
+    vi.mocked(api.listDueTomorrowReminders).mockResolvedValue([]);
+  });
+
   it("carrega tarefas pela API e expõe no contexto", async () => {
     vi.mocked(api.listTasks).mockResolvedValue([
-      { id: 1, title: "Estudar SOLID", done: false, archived: false },
+      { id: 1, title: "Estudar SOLID", done: false, archived: false, due_date: null },
     ]);
 
     render(
@@ -38,14 +42,15 @@ describe("TaskContext", () => {
 
   it("remove a tarefa arquivada da lista ativa exposta pelo contexto", async () => {
     vi.mocked(api.listTasks).mockResolvedValue([
-      { id: 1, title: "Estudar SOLID", done: false, archived: false },
-      { id: 2, title: "Relatório", done: false, archived: false },
+      { id: 1, title: "Estudar SOLID", done: false, archived: false, due_date: null },
+      { id: 2, title: "Relatório", done: false, archived: false, due_date: null },
     ]);
     vi.mocked(api.archiveTask).mockResolvedValue({
       id: 1,
       title: "Estudar SOLID",
       done: false,
       archived: true,
+      due_date: null,
     });
 
     render(
