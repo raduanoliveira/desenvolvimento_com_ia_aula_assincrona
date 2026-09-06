@@ -13,6 +13,11 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useTaskContext } from "./TaskContext";
 
+function formatDueDate(dueDate: string): string {
+  const [year, month, day] = dueDate.split("-");
+  return `${day}/${month}/${year}`;
+}
+
 export function TaskList() {
   const { tasks, error, completeTask, archiveTask, removeTask } = useTaskContext();
 
@@ -72,13 +77,17 @@ export function TaskList() {
           <ListItemText
             primary={task.title}
             secondary={
-              <Chip
-                size="small"
-                label={task.done ? "Concluída" : "Pendente"}
-                color={task.done ? "success" : "warning"}
-                variant="outlined"
-                sx={{ mt: 0.5 }}
-              />
+              <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ mt: 0.5 }}>
+                <Chip
+                  size="small"
+                  label={task.done ? "Concluída" : "Pendente"}
+                  color={task.done ? "success" : "warning"}
+                  variant="outlined"
+                />
+                {task.due_date ? (
+                  <Chip size="small" label={`Prazo ${formatDueDate(task.due_date)}`} variant="outlined" />
+                ) : null}
+              </Stack>
             }
             secondaryTypographyProps={{ component: "div" }}
             sx={{

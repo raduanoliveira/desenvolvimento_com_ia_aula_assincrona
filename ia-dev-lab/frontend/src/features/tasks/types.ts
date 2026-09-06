@@ -3,4 +3,5 @@ export type Task = {
   title: string;
   done: boolean;
   archived: boolean;
+  due_date: string | null;
 };

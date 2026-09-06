@@ -7,36 +7,52 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { archiveTask as archiveTaskRequest, createTask, deleteTask, listTasks, toggleTask } from "./taskApi";
+import {
+  archiveTask as archiveTaskRequest,
+  createTask,
+  deleteTask,
+  listDueTomorrowReminders,
+  listTasks,
+  toggleTask,
+  type CreateTaskInput,
+} from "./taskApi";
 import type { Task } from "./types";
 
 type TaskContextValue = {
   tasks: Task[];
+  reminders: Task[];
   error: string | null;
   loadTasks: () => Promise<void>;
-  addTask: (title: string) => Promise<void>;
+  addTask: (input: CreateTaskInput) => Promise<void>;
   completeTask: (id: number) => Promise<void>;
   archiveTask: (id: number) => Promise<void>;
   removeTask: (id: number) => Promise<void>;
+  dismissReminders: () => void;
 };
 
 const TaskContext = createContext<TaskContextValue | null>(null);
 
 export function TaskProvider({ children }: { children: ReactNode }) {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [reminders, setReminders] = useState<Task[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const loadTasks = useCallback(async () => {
     try {
       setError(null);
-      setTasks(await listTasks());
+      const [nextTasks, nextReminders] = await Promise.all([
+        listTasks(),
+        listDueTomorrowReminders(),
+      ]);
+      setTasks(nextTasks);
+      setReminders(nextReminders);
     } catch {
       setError("Não foi possível carregar as tarefas.");
     }
   }, []);
 
-  const addTask = useCallback(async (title: string) => {
-    const created = await createTask(title);
+  const addTask = useCallback(async (input: CreateTaskInput) => {
+    const created = await createTask(input);
     setTasks((current) => [created, ...current]);
   }, []);
 
@@ -55,13 +71,27 @@ export function TaskProvider({ children }: { children: ReactNode }) {
     setTasks((current) => current.filter((task) => task.id !== id));
   }, []);
 
+  const dismissReminders = useCallback(() => {
+    setReminders([]);
+  }, []);
+
   useEffect(() => {
     void loadTasks();
   }, [loadTasks]);
 
   const value = useMemo(
-    () => ({ tasks, error, loadTasks, addTask, completeTask, archiveTask, removeTask }),
-    [tasks, error, loadTasks, addTask, completeTask, archiveTask, removeTask]
+    () => ({
+      tasks,
+      reminders,
+      error,
+      loadTasks,
+      addTask,
+      completeTask,
+      archiveTask,
+      removeTask,
+      dismissReminders,
+    }),
+    [tasks, reminders, error, loadTasks, addTask, completeTask, archiveTask, removeTask, dismissReminders]
   );
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;

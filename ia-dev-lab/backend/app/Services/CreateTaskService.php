@@ -17,6 +17,7 @@ class CreateTaskService
             'title' => trim($payload['title']),
             'done' => false,
             'user_id' => $ownerId,
+            'due_date' => $payload['due_date'] ?? null,
         ]);
     }
 }
