@@ -1,20 +1,28 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[brazil]{babel}
 \usepackage{lmodern}
-\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage[a4paper,margin=2.0cm]{geometry}
 \usepackage{setspace}
 \usepackage{hyperref}
 \usepackage{xurl}
 \usepackage{booktabs}
 \usepackage{array}
+\usepackage{tabularx}
+\usepackage{ragged2e}
 
 \pagestyle{empty}
-\singlespacing
+\setstretch{0.97}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0.3em}
+\setlength{\parskip}{0.2em}
+\emergencystretch=3em
+\Urlmuskip=0mu plus 3mu
+
+\makeatletter
+\g@addto@macro{\UrlBreaks}{\do\/\do\-\do\_\do\.\do\:}
+\makeatother
 
 \begin{document}
 
@@ -23,40 +31,45 @@
 Geomerez Raduan de Oliveira Bandeira
 \end{center}
 
-\vspace{0.1em}
+\vspace{0.06em}
 \hrule
-\vspace{0.35em}
+\vspace{0.24em}
 
 Repositório: \url{https://github.com/raduanoliveira/desenvolvimento_com_ia_aula_assincrona}
 
-Esta página cobre a \textbf{Etapa 1} da prática de Harness e Arquitetura (autonomia + hook). Detalhe em \path{ia-dev-lab/docs/harness-comparacao-auto-plan.md} e \path{ia-dev-lab/docs/harness-hook-evidencia.md}.
+Este relatório apresenta os resultados da Etapa~1 da prática assíncrona de Harness e Arquitetura. A etapa compreende a comparação entre dois modos de autonomia do agente e a criação de um hook de proteção sobre uma ação de risco do próprio projeto. O registro detalhado da comparação está em \path{ia-dev-lab/docs/harness-comparacao-auto-plan.md}. A evidência do hook está em \path{ia-dev-lab/docs/harness-hook-evidencia.md}.
 
-\textbf{1. Projeto e tarefa.} Continuei no \texttt{ia-dev-lab} (Laravel + React + Docker). A tarefa pequena foi a mesma nas duas corridas: prazo opcional \texttt{due\_date} nas tarefas e lembrete só no sistema (toaster MUI) ao entrar no dashboard, para itens ativos com prazo amanhã. Segui o \texttt{AGENTS.md}: Service por caso de uso, controller só HTTP, testes no Docker. Os ADRs 0001 a 0004 não foram alterados.
+\textbf{1. Projeto e tarefa escolhida.} Mantive o laboratório \texttt{ia-dev-lab}, já utilizado nas práticas anteriores, com API em Laravel, interface em React com TypeScript e Material UI, e execução pelo Docker. A tarefa pequena, repetida nas duas execuções, foi acrescentar prazo opcional às tarefas (\texttt{due\_date}, apenas data) e um lembrete interno ao sistema: ao entrar no painel autenticado, o usuário deve ser avisado, por toaster, sobre tarefas ativas, não arquivadas e não concluídas cujo prazo é o dia seguinte. A implementação deveria respeitar o \path{AGENTS.md}: um Service por caso de uso, controller restrito ao HTTP, persistência por repositório e testes no Docker.
 
-\textbf{2. Dois modos de autonomia.} No modo \textbf{Auto} (\texttt{feature/prazo-auto}) o agente implementou com aceite contínuo; registrei prompt, modelo (Composer) e métricas em \path{ia-dev-lab/docs/harness-execucao-auto.md}. No modo \textbf{Plan} (\texttt{feature/prazo-plan}) montei o plano, revisei e só então autorizei a edição; o registro está em \path{ia-dev-lab/docs/harness-execucao-plan.md}. O prompt foi idêntico nas duas.
+\textbf{2. Comparação entre modos de autonomia.} Executei a mesma tarefa duas vezes, com o mesmo prompt e o mesmo modelo (Composer), em branches distintas. No modo Auto (\path{feature/prazo-auto}), o agente avançou com aceite contínuo de edições. Registrei o prompt, o modelo, o tempo aproximado, a sensação de controle e o risco percebido em \path{ia-dev-lab/docs/harness-execucao-auto.md}. No modo Plan (\path{feature/prazo-plan}), primeiro construí e revisei um plano escrito; só depois autorizei a implementação. O registro correspondente está em \path{ia-dev-lab/docs/harness-execucao-plan.md}. A tabela abaixo resume a comparação pedida no enunciado. A versão ampliada, com observações qualitativas, está no comparativo citado no início.
 
 {\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{3.8cm}>{\raggedright\arraybackslash}p{3.8cm}>{\centering\arraybackslash}p{1.6cm}@{}}
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{@{}
+  >{\RaggedRight\arraybackslash}p{1.8cm}
+  >{\RaggedRight\arraybackslash}X
+  >{\RaggedRight\arraybackslash}X
+  >{\Centering\arraybackslash}p{1.2cm}
+  >{\RaggedRight\arraybackslash}X
+  @{}}
 \toprule
-Dimensão & Auto & Plan & Pref. \\
+Dimensão & Auto & Plan & Pref. & Razão da preferência \\
 \midrule
-Tempo & $\sim$30 min ponta a ponta & $\sim$40 min após ok do plano & Auto \\
-Controle & média & alta & Plan \\
-Risco & médio (retrabalho em testes) & baixo & Plan \\
-Testes & 54 backend / 25 frontend & 54 backend / 26 frontend & Plan \\
+Tempo & cerca de 30~minutos, de ponta a ponta & cerca de 40~minutos após o aceite do plano & Auto & O Auto concluiu a mesma tarefa em menos tempo, sem etapa prévia de planejamento. \\
+Risco & médio; houve retrabalho em testes & baixo & Plan & No Auto precisei corrigir falhas depois; no Plan o escopo já estava fechado. \\
+Testes & 54 no backend e 25 no frontend & 54 no backend e 26 no frontend & Plan & Cobertura equivalente, com um caso a mais no frontend na execução Plan. \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 }
 
-\textbf{3. Conclusão da comparação.} Os dois modos entregaram a feature equivalente. Eu fico com \texttt{feature/prazo-plan}: o tempo a mais vale o controle e o risco menor. A Auto permanece no Git como evidência.
+\textbf{3. Decisão após a comparação.} As duas execuções produziram comportamento funcional equivalente e respeitaram as camadas previstas no \path{AGENTS.md}. Optei por seguir com a branch \path{feature/prazo-plan}. Embora o modo Auto tenha sido mais rápido, o modo Plan ofereceu maior controle humano e menor risco percebido, o que me parece mais adequado a um harness mínimo. A branch Auto permanece no repositório como evidência da comparação.
 
-\textbf{4. Hook (guardrail).} Criei um hook de projeto em \path{.cursor/hooks.json} que chama \path{.cursor/hooks/block-db-destruction.mjs} nos eventos \texttt{beforeShellExecution} e \texttt{preToolUse}. Ele bloqueia destruição do banco (\texttt{migrate:fresh}, \texttt{db:wipe}, \texttt{schema:drop}, apagar \texttt{database.sqlite}), risco diferente do exemplo de merge na \texttt{main}. Testei com fixtures locais (8/8) e disparei de propósito um comando com \texttt{migrate:fresh} no agente: o Cursor recusou com a mensagem do harness. Log em \path{ia-dev-lab/docs/harness-hook-evidencia-log.txt}.
+\textbf{4. Hook de proteção.} Além da comparação de autonomia, configurei um hook de projeto em \path{.cursor/hooks.json}, associado ao script \path{.cursor/hooks/block-db-destruction.mjs}, nos eventos \path{beforeShellExecution} e \path{preToolUse}. O risco escolhido foi a destruição do banco do laboratório, por exemplo por meio de \texttt{migrate:fresh}, \texttt{db:wipe}, \texttt{schema:drop} ou remoção do arquivo \path{database.sqlite}. Validei o hook de duas maneiras: uma bateria local com oito casos, todos aprovados, e uma tentativa deliberada, no próprio agente, de executar um comando contendo \texttt{migrate:fresh}. O Cursor recusou a ação e exibiu a mensagem definida pelo harness. O log dessa validação está em \path{ia-dev-lab/docs/harness-hook-evidencia-log.txt}.
 
-\vspace{0.1em}
+\vspace{0.06em}
 \hrule
-\vspace{0.3em}
+\vspace{0.18em}
 
-\textbf{Onde está o restante.} Comparativo: \path{ia-dev-lab/docs/harness-comparacao-auto-plan.md}. Hook: \path{ia-dev-lab/docs/harness-hook-evidencia.md}. Execuções: \path{ia-dev-lab/docs/harness-execucao-auto.md} e \path{ia-dev-lab/docs/harness-execucao-plan.md}.
+\textbf{Documentação complementar.} Comparativo completo: \path{ia-dev-lab/docs/harness-comparacao-auto-plan.md}. Evidência do hook: \path{ia-dev-lab/docs/harness-hook-evidencia.md}. Execuções Auto e Plan: \path{ia-dev-lab/docs/harness-execucao-auto.md} e \path{ia-dev-lab/docs/harness-execucao-plan.md}.
 
 \end{document}
